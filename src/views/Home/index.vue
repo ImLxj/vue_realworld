@@ -1,16 +1,16 @@
 <template>
   <div>
     <my-header></my-header>
-    <my-container></my-container>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
 import MyHeader from '@/components/MyHeader'
-import MyContainer from '@/components/MyContainer'
+
 export default {
   name: 'Home',
-  components: { MyHeader, MyContainer }
+  components: { MyHeader }
 }
 </script>
 
