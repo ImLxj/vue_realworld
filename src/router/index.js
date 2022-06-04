@@ -8,6 +8,37 @@ import MyProfile from '../views/Home/MyProfile'
 import Login from '../views/Home/Login'
 import Register from '../views/Home/Register'
 
+// 先保存push 和 replace 方法
+const originPush = VueRouter.prototype.push
+const originReplace = VueRouter.prototype.replace
+
+// 重写push 和 replace方法
+VueRouter.prototype.push = function (location, resolve, reject) {
+  if (resolve && reject) {
+    originPush.call(this, location, resolve, reject)
+  } else {
+    originPush.call(
+      this,
+      location,
+      () => {},
+      () => {}
+    )
+  }
+}
+
+VueRouter.prototype.replace = function (location, resolve, reject) {
+  if (resolve && reject) {
+    originReplace.call(this, location, resolve, reject)
+  } else {
+    originReplace.call(
+      this,
+      location,
+      () => {},
+      () => {}
+    )
+  }
+}
+
 Vue.use(VueRouter)
 
 const routes = [
@@ -58,7 +89,7 @@ const router = new VueRouter({
 // 配置全局路由守卫
 router.beforeEach((to, from, next) => {
   if (to.meta.validator) {
-    if (!window.localStorage.token) {
+    if (!window.sessionStorage.token) {
       return console.log('请登录')
     }
   }

@@ -14,6 +14,7 @@
                 class="form-control form-control-lg"
                 type="text"
                 placeholder="Your Name"
+                v-model="username"
               />
             </fieldset>
             <fieldset class="form-group">
@@ -21,6 +22,7 @@
                 class="form-control form-control-lg"
                 type="text"
                 placeholder="Email"
+                v-model="email"
               />
             </fieldset>
             <fieldset class="form-group">
@@ -29,9 +31,13 @@
                 type="password"
                 placeholder="Password"
                 autocomplete
+                v-model="password"
               />
             </fieldset>
-            <button class="btn btn-lg btn-primary pull-xs-right">
+            <button
+              @click="getRegister"
+              class="btn btn-lg btn-primary pull-xs-right"
+            >
               Sign up
             </button>
           </form>
@@ -44,7 +50,31 @@
 <script>
 import '@/assets/css/user-style.css'
 export default {
-  name: 'Register'
+  name: 'Register',
+  data() {
+    return {
+      username: '',
+      email: '',
+      password: ''
+    }
+  },
+  methods: {
+    async getRegister() {
+      const user = {
+        username: this.username,
+        email: this.email,
+        password: this.password
+      }
+      const result = await this.$http({
+        method: 'POST',
+        url: 'users',
+        data: { user }
+      })
+      if (result.status === 201) {
+        this.$router.push('/home/login')
+      }
+    }
+  }
 }
 </script>
 <style lang="less" scoped>

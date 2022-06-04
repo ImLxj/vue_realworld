@@ -11,6 +11,7 @@
                   type="text"
                   class="form-control form-control-lg"
                   placeholder="文章标题"
+                  v-model="article.title"
                 />
               </fieldset>
               <fieldset class="form-group">
@@ -18,6 +19,7 @@
                   type="text"
                   class="form-control"
                   placeholder="这篇文章是关于什么的?"
+                  v-model="article.description"
                 />
               </fieldset>
               <fieldset class="form-group">
@@ -25,6 +27,7 @@
                   class="form-control"
                   rows="8"
                   placeholder="把你的文章写下下来"
+                  v-model="article.body"
                 ></textarea>
               </fieldset>
               <fieldset class="form-group">
@@ -32,12 +35,14 @@
                   type="text"
                   class="form-control"
                   placeholder="输入标签,各个标签之间用逗号隔开"
+                  v-model="article.tagList"
                 />
                 <div class="tag-list"></div>
               </fieldset>
               <button
                 class="btn btn-lg pull-xs-right btn-primary"
                 type="button"
+                @click="createArticle"
               >
                 发表文章
               </button>
@@ -46,12 +51,68 @@
         </div>
       </div>
     </div>
+    <template>
+      <div v-for="(count, index) in clickCount" :key="index">
+        <Bounced v-if="isLogin" :message="message" />
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
+import { reqCreateArticle } from '@/api/axios'
+import Bounced from '@/components/Bounced'
 export default {
-  name: 'CreateArticle'
+  name: 'CreateArticle',
+  components: { Bounced },
+  data() {
+    return {
+      article: { title: '', description: '', body: '', tagList: '' },
+      isLogin: false,
+      message: '请登录',
+      clickCount: 0
+    }
+  },
+  methods: {
+    async createArticle() {
+      this.rulesTitle()
+      this.rulesDescription()
+      this.rulesBody()
+      const result = await reqCreateArticle(this.article)
+      console.log(result)
+      // 销毁所有的弹框
+      if (!result.data.errors) {
+        this.isLogin = false
+      }
+    },
+    // 判断题目是否为空
+    rulesTitle() {
+      const reg = /\S/
+      if (!reg.test(this.article.title)) {
+        this.message = '请输入文章题目'
+        this.clickCount += 1
+        this.isLogin = true
+      }
+    },
+    // 判断摘要是否为空
+    rulesDescription() {
+      const reg = /\S/
+      if (!reg.test(this.article.description)) {
+        this.message = '请输入文章摘要'
+        this.clickCount += 1
+        this.isLogin = true
+      }
+    },
+    // 判断文章内容是否为空
+    rulesBody() {
+      const reg = /\S/
+      if (!reg.test(this.article.body)) {
+        this.message = '请输入文章内容'
+        this.clickCount += 1
+        this.isLogin = true
+      }
+    }
+  }
 }
 </script>
 

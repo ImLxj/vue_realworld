@@ -8,37 +8,33 @@
             <router-link to="/home/register">Have an account?</router-link>
           </p>
 
-          <form>
-            <fieldset class="form-group">
-              <input
-                class="form-control form-control-lg"
-                type="text"
-                placeholder="Email"
-                @blur="rulesEmail"
-                v-model="email"
-              />
-              <span class="validator" v-show="emValidator">邮箱格式不正确</span>
-            </fieldset>
-            <fieldset class="form-group">
-              <input
-                class="form-control form-control-lg"
-                type="password"
-                placeholder="Password"
-                @blur="rulesPassword"
-                autocomplete
-                v-model="password"
-              />
-              <span class="validator" v-show="pawValidator"
-                >密码格式不正确</span
-              >
-            </fieldset>
-            <button
-              @click="getLogin"
-              class="btn btn-lg btn-primary pull-xs-right"
-            >
-              Sign up
-            </button>
-          </form>
+          <fieldset class="form-group">
+            <input
+              class="form-control form-control-lg"
+              type="text"
+              placeholder="Email"
+              @blur="rulesEmail"
+              v-model="email"
+            />
+            <span class="validator" v-show="emValidator">邮箱格式不正确</span>
+          </fieldset>
+          <fieldset class="form-group">
+            <input
+              class="form-control form-control-lg"
+              type="password"
+              placeholder="Password"
+              @blur="rulesPassword"
+              autocomplete
+              v-model="password"
+            />
+            <span class="validator" v-show="pawValidator">密码格式不正确</span>
+          </fieldset>
+          <button
+            @click="getLogin"
+            class="btn btn-lg btn-primary pull-xs-right"
+          >
+            Sign up
+          </button>
         </div>
       </div>
     </div>
@@ -65,17 +61,10 @@ export default {
       this.rulesEmail()
       this.rulesPassword()
       if (!this.emValidator && !this.pawValidator) {
-        const { data: result } = await this.$http.post('users/login', {
-          user
-        })
-        const token = `Bearer ${result.token}`
-        window.localStorage.setItem('token', token)
+        this.$store.dispatch('getUserLogin', user)
+
         this.$router.push({
-          name: 'container',
-          params: {
-            username: result.username,
-            image: result.image
-          }
+          name: 'container'
         })
         return
       }

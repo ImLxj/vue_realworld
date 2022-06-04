@@ -25,19 +25,21 @@
           <i class="ion-gear-a"></i>&nbsp;我的资料
         </a>
       </li>
-      <li class="nav-item" v-show="!isToken">
-        <router-link class="nav-link" active-class="active" to="/home/login"
-          >登录</router-link
-        >
-      </li>
-      <li class="nav-item" v-show="!isToken">
-        <router-link class="nav-link" active-class="active" to="/home/register"
-          >注册</router-link
-        >
-      </li>
-      <li class="nav-item" v-show="!isToken">
-        <a href="#">{{}}</a>
-      </li>
+      <template v-if="isLogin">
+        <li class="nav-item">
+          <router-link class="nav-link" active-class="active" to="/home/login"
+            >登录</router-link
+          >
+        </li>
+        <li class="nav-item">
+          <router-link
+            class="nav-link"
+            active-class="active"
+            to="/home/register"
+            >注册</router-link
+          >
+        </li>
+      </template>
     </ul>
     <!-- 提示弹框 -->
     <!-- <Bounced v-show="isBounced" /> -->
@@ -48,7 +50,9 @@
 export default {
   name: 'Header',
   data() {
-    return {}
+    return {
+      isLogin: true
+    }
   },
   methods: {
     createArticle(str) {

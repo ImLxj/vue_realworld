@@ -19,7 +19,9 @@
       :key="index"
     >
       <div class="article-meta">
-        <a class="head-img" href="profile.html"><img src="#" /></a>
+        <a class="head-img" href="profile.html"
+          ><img :src="item.author.image"
+        /></a>
         <div class="info">
           <a @click="articleContent" class="author">{{
             item.author.username
@@ -38,25 +40,38 @@
         <span>Read more...</span>
       </a>
     </div>
+    <Bounced v-if="isLogin" :message="message" />
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import Bounced from '@/components/Bounced'
 export default {
   name: 'Tabs',
+  components: { Bounced },
   data() {
     return {
       animation: 'allArticle',
-      articleList: []
+      isLogin: false,
+      message: '请登录'
     }
   },
   mounted() {
     this.$refs.allArticle.style.color = '#5cb85c'
-    // this.getArticleList()
+    this.$store.dispatch('getArticleList')
   },
   // tabs 颜色切换
   methods: {
     myArticle(e) {
+      if (!window.sessionStorage.getItem('token')) {
+        this.message = '请登录'
+        this.isLogin = true
+        return
+      }
+      const authorId = this.userInfo._id
+      if (!authorId) return console.log('没用当前用户id 请登录')
+      this.$store.dispatch('getUserArticle', authorId)
       this.animation = 'myArticle'
       e.target.style.color = '#5cb85c'
       this.$refs.allArticle.style.color = ''
@@ -65,17 +80,19 @@ export default {
       this.animation = 'allArticle'
       e.target.style.color = '#5cb85c'
       this.$refs.myArticle.style.color = ''
-    },
-    async getArticleList() {
-      const { data: result } = await this.$http.get('articles')
-      this.articleList = result.articles
-      console.log(result.articles)
+      this.$store.dispatch('getArticleList')
     },
     articleContent() {
       this.$router.push({
         path: '/home/'
       })
     }
+  },
+  computed: {
+    ...mapState({
+      articleList: (state) => state.article.articleList,
+      userInfo: (state) => state.user.userInfo
+    })
   }
 }
 </script>
