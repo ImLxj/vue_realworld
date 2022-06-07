@@ -62,13 +62,11 @@ export default {
       this.rulesPassword()
       if (!this.emValidator && !this.pawValidator) {
         this.$store.dispatch('getUserLogin', user)
-
         this.$router.push({
           name: 'container'
         })
-        return
+        return false
       }
-      console.log('请登录')
     },
     rulesEmail() {
       // 邮箱校验

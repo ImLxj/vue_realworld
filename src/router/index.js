@@ -7,6 +7,7 @@ import CreateArticle from '../views/Home/CreateArticle'
 import MyProfile from '../views/Home/MyProfile'
 import Login from '../views/Home/Login'
 import Register from '../views/Home/Register'
+import MyArticle from '../views/Home/MyContainer/MyArticle'
 
 // 先保存push 和 replace 方法
 const originPush = VueRouter.prototype.push
@@ -77,6 +78,18 @@ const routes = [
         path: 'register',
         name: 'register',
         component: Register
+      },
+      {
+        path: 'myarticle',
+        name: 'myarticle',
+        component: MyArticle,
+        // 判断是否是点击跳转的 如果不是点击跳转的则还是当前页面
+        beforeEnter: (to, from, next) => {
+          if (!to.params.id) {
+            next('/home/container')
+          }
+          next()
+        }
       }
     ]
   }

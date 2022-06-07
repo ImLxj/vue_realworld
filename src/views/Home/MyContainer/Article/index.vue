@@ -19,34 +19,40 @@
       :key="index"
     >
       <div class="article-meta">
-        <a class="head-img" href="profile.html"
-          ><img :src="item.author.image"
-        /></a>
+        <a class="head-img" href="#"><img :src="item.author.image" /></a>
         <div class="info">
           <a @click="articleContent" class="author">{{
             item.author.username
           }}</a>
-          <span class="date">{{ item.createdAt }}</span>
+          <span class="date">{{ item.createdAt | timer }}</span>
         </div>
-        <button class="btn btn-outline-primary btn-sm pull-xs-right">
+        <button
+          class="btn btn-outline-primary btn-sm pull-xs-right"
+          @click="sumFavorites(item)"
+        >
           <i class="glyphicon glyphicon-heart-empty"></i>
           {{ item.favoritesCount }}
         </button>
       </div>
       <div class="clear"></div>
-      <a href="" class="preview-link">
+      <a href="" class="preview-link" @click.prevent="sendArticle(item)">
         <h1>{{ item.title }}</h1>
         <p>{{ item.description }}</p>
         <span>Read more...</span>
       </a>
     </div>
-    <Bounced v-if="isLogin" :message="message" />
+    <template>
+      <div v-for="(count, index) in clickCount" :key="index + 'article'">
+        <Bounced v-if="isLogin" :message="message" />
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import Bounced from '@/components/Bounced'
+import { reqUpdateArticle } from '@/api/axios'
 export default {
   name: 'Tabs',
   components: { Bounced },
@@ -54,7 +60,8 @@ export default {
     return {
       animation: 'allArticle',
       isLogin: false,
-      message: '请登录'
+      message: '请登录',
+      clickCount: 0
     }
   },
   mounted() {
@@ -67,14 +74,22 @@ export default {
       if (!window.sessionStorage.getItem('token')) {
         this.message = '请登录'
         this.isLogin = true
+        this.clickCount += 1
         return
       }
       const authorId = this.userInfo._id
-      if (!authorId) return console.log('没用当前用户id 请登录')
+      if (!authorId) {
+        this.message = '没有当前用户id，请登录'
+        this.isLogin = true
+        this.clickCount += 1
+        return
+      }
       this.$store.dispatch('getUserArticle', authorId)
       this.animation = 'myArticle'
       e.target.style.color = '#5cb85c'
       this.$refs.allArticle.style.color = ''
+      this.isLogin = false
+      this.clickCount = 1
     },
     allArticle(e) {
       this.animation = 'allArticle'
@@ -86,6 +101,37 @@ export default {
       this.$router.push({
         path: '/home/'
       })
+    },
+    // 给文章点赞
+    async sumFavorites(article) {
+      if (!this.userInfo._id || !window.sessionStorage.getItem('token')) {
+        this.message = '请登录'
+        this.isLogin = true
+        this.clickCount += 1
+        return
+      }
+      article.favoritesCount++
+      const result = await reqUpdateArticle(article)
+      if (result.status === 200) {
+        console.log('操作成功')
+        this.isLogin = false
+      }
+    },
+    // 跳转到文章具体内容页面
+    sendArticle(articleInfo) {
+      if (!this.userInfo._id || !window.sessionStorage.getItem('token')) {
+        this.message = '请登录'
+        this.isLogin = true
+        this.clickCount += 1
+        return 0
+      }
+      this.$router.push({
+        name: 'myarticle',
+        params: {
+          id: articleInfo._id
+        }
+      })
+      this.isLogin = false
     }
   },
   computed: {
