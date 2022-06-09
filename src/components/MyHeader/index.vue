@@ -20,7 +20,7 @@
       <li class="nav-item">
         <a
           :class="{ ['nav-link']: true, active: isIndex === 3 }"
-          @click="createArticle('profile', 3)"
+          @click="createArticle('setting', 3)"
         >
           <i class="ion-gear-a"></i>&nbsp;我的资料
         </a>
@@ -86,7 +86,7 @@ export default {
         })
       }
       // 点击我的资料
-      if (str === 'profile') {
+      if (str === 'setting') {
         if (
           !window.sessionStorage.getItem('token') ||
           !this.$store.state.user.userInfo._id
@@ -100,7 +100,7 @@ export default {
         this.countClick = 0
         this.isIndex = 3
         this.$router.push({
-          name: 'myprofile'
+          name: 'setting'
         })
       }
       // 点击主页

@@ -46,6 +46,27 @@
         <Bounced v-if="isLogin" :message="message" />
       </div>
     </template>
+    <div class="pagination">
+      <div class="container">
+        <div>
+          <button class="on">上一页</button>
+        </div>
+
+        <div class="pagination-content">
+          <button class="center">1</button>
+          <button class="center">...</button>
+          <button class="center">2</button>
+          <button class="center">3</button>
+          <button class="center">4</button>
+          <button class="center">...</button>
+          <button class="center">8</button>
+        </div>
+
+        <div>
+          <button class="next">下一页</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -209,7 +230,7 @@ export default {
       float: left;
       display: flex;
       flex-direction: column;
-      margin-left: 5px;
+      margin-left: 10px;
       a {
         color: #5cb85c;
       }
@@ -264,6 +285,50 @@ export default {
   }
   .preview-link:hover {
     text-decoration: none;
+  }
+}
+.pagination {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 512px;
+    button {
+      outline: none;
+      box-sizing: border-box;
+      border: none;
+      background: #f3f3f3;
+    }
+    .center {
+      width: 40px;
+      height: 40px;
+      margin-left: 2px;
+      box-sizing: border-box;
+      // border: 0.5px solid rgba(0, 0, 0, 0.5) !important;
+      font-size: 20px;
+      text-align: center;
+      line-height: 40px;
+    }
+    .on,
+    .next {
+      height: 40px;
+      text-align: center;
+      line-height: 40px;
+    }
+    button:hover {
+      background: #5cb85c;
+    }
+  }
+  .pagination-content {
+    width: 295px;
+    height: 40px;
+    overflow: hidden;
   }
 }
 </style>

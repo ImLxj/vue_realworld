@@ -8,6 +8,7 @@ import MyProfile from '../views/Home/MyProfile'
 import Login from '../views/Home/Login'
 import Register from '../views/Home/Register'
 import MyArticle from '../views/Home/MyContainer/MyArticle'
+import Setting from '../views/Home/Setting'
 
 // 先保存push 和 replace 方法
 const originPush = VueRouter.prototype.push
@@ -90,6 +91,11 @@ const routes = [
           }
           next()
         }
+      },
+      {
+        path: 'setting',
+        name: 'setting',
+        component: Setting
       }
     ]
   }

@@ -10,6 +10,7 @@ export const rulesEmail = (email) => {
     return false
   }
 }
+
 // 用户名校验
 export const rulesUsername = (username) => {
   const usernameValidator = /^[a-zA-Z0-9_-]{4,16}$/
@@ -19,6 +20,7 @@ export const rulesUsername = (username) => {
     return false
   }
 }
+
 // 密码校验
 export const rulesPassword = (password) => {
   const passwordValidator = /^[0-9]{4,16}$/
