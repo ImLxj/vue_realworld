@@ -15,7 +15,11 @@
                 type="text"
                 placeholder="Your Name"
                 v-model="username"
+                @blur="rulesUsername"
               />
+              <span class="validator" v-show="usernameValidator"
+                >用户名格式不正确</span
+              >
             </fieldset>
             <fieldset class="form-group">
               <input
@@ -23,7 +27,11 @@
                 type="text"
                 placeholder="Email"
                 v-model="email"
+                @blur="rulesEmail"
               />
+              <span class="validator" v-show="emailValidator"
+                >邮箱格式不正确</span
+              >
             </fieldset>
             <fieldset class="form-group">
               <input
@@ -32,10 +40,14 @@
                 placeholder="Password"
                 autocomplete
                 v-model="password"
+                @blur="rulesPassword"
               />
+              <span class="validator" v-show="passwordValidator"
+                >密码格式不正确</span
+              >
             </fieldset>
             <button
-              @click="getRegister"
+              @click.prevent="getRegister"
               class="btn btn-lg btn-primary pull-xs-right"
             >
               Sign up
@@ -44,35 +56,75 @@
         </div>
       </div>
     </div>
+    <template>
+      <div v-for="(count, index) in clickCount" :key="index + 'register'">
+        <Bounced v-if="isLogin" :message="message" />
+      </div>
+    </template>
   </div>
 </template>
 
 <script>
+import { rulesEmail, rulesPassword, rulesUsername } from '@/views/Home/rules'
+import { reqGetRegister } from '@/api/axios'
 import '@/assets/css/user-style.css'
+import Bounced from '@/components/Bounced'
 export default {
   name: 'Register',
+  components: { Bounced },
   data() {
     return {
       username: '',
       email: '',
-      password: ''
+      password: '',
+      usernameValidator: false,
+      passwordValidator: false,
+      emailValidator: false,
+      isLogin: false,
+      message: '请登录',
+      clickCount: 0
     }
   },
   methods: {
     async getRegister() {
-      const user = {
-        username: this.username,
-        email: this.email,
-        password: this.password
+      this.emailValidator = rulesEmail(this.email)
+      this.passwordValidator = rulesPassword(this.password)
+      this.usernameValidator = rulesUsername(this.username)
+      if (
+        !this.usernameValidator &&
+        !this.emailValidator &&
+        !this.passwordValidator
+      ) {
+        const result = await reqGetRegister({
+          username: this.username,
+          email: this.email,
+          password: this.password
+        })
+        console.log(result)
+        if (result.status === 200) {
+          const error = result.data.errors
+          error.forEach((item) => {
+            // 注意点：给子组件是data里面的响应式数据，这样当最后一个错误改变message的内容 所有的弹框内容都会发生改变,解决这种方法就是向子组件传递函数。
+            this.clickCount += 1
+            this.message = item.msg
+            this.isLogin = true
+          })
+        }
+        if (result.status === 201) {
+          this.$router.push('/home/login')
+          this.clickCount = 0
+          this.isLogin = false
+        }
       }
-      const result = await this.$http({
-        method: 'POST',
-        url: 'users',
-        data: { user }
-      })
-      if (result.status === 201) {
-        this.$router.push('/home/login')
-      }
+    },
+    rulesEmail() {
+      this.emailValidator = rulesEmail(this.email)
+    },
+    rulesPassword() {
+      this.passwordValidator = rulesPassword(this.password)
+    },
+    rulesUsername() {
+      this.usernameValidator = rulesUsername(this.username)
     }
   }
 }
@@ -105,11 +157,19 @@ input {
 
 .btn {
   background: #5cb85c;
-  border: none;
+  border: none !important;
   float: right;
+  outline: none !important;
 }
 
 .btn:hover {
   background: green;
+}
+.validator {
+  color: red;
+  font-size: 12px;
+  position: absolute;
+  font-weight: 100;
+  margin-left: 3px;
 }
 </style>
