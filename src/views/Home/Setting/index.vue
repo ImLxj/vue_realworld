@@ -3,7 +3,7 @@
     <div class="container page">
       <div class="row setting-center">
         <div class="col-md-6 offset-md-3 col-xs-12">
-          <h1 class="text-xs-center">Your Settings</h1>
+          <h1 class="text-xs-center">修改信息</h1>
           <form>
             <fieldset>
               <fieldset class="form-group">
@@ -42,7 +42,7 @@
                 />
               </fieldset>
               <button class="btn btn-lg btn-primary pull-xs-right">
-                Update Settings
+                确定修改
               </button>
             </fieldset>
           </form>

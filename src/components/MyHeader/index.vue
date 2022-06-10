@@ -25,7 +25,7 @@
           <i class="ion-gear-a"></i>&nbsp;我的资料
         </a>
       </li>
-      <template v-if="isLogin">
+      <template v-if="!userInfo.username">
         <li class="nav-item">
           <a
             :class="{ ['nav-link']: true, active: isIndex === 4 }"
@@ -41,6 +41,18 @@
           >
         </li>
       </template>
+      <template v-else>
+        <li class="nav-item">
+          <a class="user-img" href="#">
+            <img :src="userInfo.image" alt="" />
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="user-name">
+            <span>退出</span>
+          </a>
+        </li>
+      </template>
     </ul>
     <!-- 提示弹框 -->
     <template>
@@ -52,13 +64,13 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Bounced from '@/components/Bounced'
 export default {
   name: 'Header',
   components: { Bounced },
   data() {
     return {
-      isLogin: true,
       isBounced: false,
       message: '请登录',
       countClick: 0,
@@ -119,6 +131,11 @@ export default {
         this.$router.push('/home/register')
       }
     }
+  },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user.userInfo
+    })
   }
 }
 </script>
@@ -135,6 +152,16 @@ a {
   font-weight: bold;
   font-size: 24px;
   color: #5cb85c;
+}
+
+.user-img {
+  width: 50px;
+  height: 50px;
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+  }
 }
 
 .header-right {
