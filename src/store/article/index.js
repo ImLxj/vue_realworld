@@ -6,12 +6,14 @@ import {
 
 const state = {
   articleList: [],
-  articleInfo: {}
+  articleInfo: {},
+  articlesCount: 0
 }
 const getters = {}
 const mutations = {
   GETARTICLELIST(state, data) {
     state.articleList = data.articles ? data.articles : data
+    state.articlesCount = data.articlesCount
   },
   GETCOMMENT(state, data) {
     state.articleInfo = data.article
@@ -19,8 +21,8 @@ const mutations = {
 }
 const actions = {
   // 获取文章列表
-  async getArticleList(context) {
-    const result = await reqGetArticle()
+  async getArticleList(context, option) {
+    const result = await reqGetArticle(option)
     if (result.status === 200) {
       context.commit('GETARTICLELIST', result.data)
     }
@@ -28,7 +30,6 @@ const actions = {
   // 获取当前登录用户发布的文章
   async getUserArticle(context, authorId) {
     const result = await reqGetUserArticle(authorId)
-    console.log(result)
     if (!result) {
       return console.log('没有返回任何数据')
     }

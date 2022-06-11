@@ -30,3 +30,13 @@ export const rulesPassword = (password) => {
     return false
   }
 }
+
+// 判断内容是否为空
+export const rulesBody = (str) => {
+  const reg = /\S/
+  if (!reg.test(str)) {
+    return true
+  } else {
+    return false
+  }
+}

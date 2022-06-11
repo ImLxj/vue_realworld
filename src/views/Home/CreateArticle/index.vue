@@ -79,7 +79,14 @@ export default {
       this.rulesDescription()
       this.rulesBody()
       const result = await reqCreateArticle(this.article)
-      console.log(result)
+      if (result.status === 200) {
+        this.article.title = ''
+        this.article.description = ''
+        this.article.body = ''
+        this.article.tagList = ''
+        alert('发表文章成功')
+        this.$router.push('/home/container')
+      }
       // 销毁所有的弹框
       if (!result.data.errors) {
         this.isLogin = false

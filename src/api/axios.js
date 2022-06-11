@@ -1,9 +1,13 @@
-import article from '@/store/article'
-import { reject } from 'lodash'
 import instance from './index'
 
 // 发送文章请求
-export const reqGetArticle = () => instance.get('articles')
+export const reqGetArticle = (option) => {
+  return instance({
+    method: 'GET',
+    url: 'articles',
+    params: option
+  })
+}
 
 // 发送获取当前用户文章请求
 export const reqGetUserArticle = (authorId) => {

@@ -48,7 +48,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a href="user-name">
+          <a @click.prevent="exit" href="#">
             <span>退出</span>
           </a>
         </li>
@@ -123,13 +123,20 @@ export default {
       // 点击登录
       if (str === 'login') {
         this.isIndex = 4
+        this.isBounced = false
         this.$router.push('/home/login')
       }
       // 点击注册
       if (str === 'register') {
         this.isIndex = 5
+        this.isBounced = false
         this.$router.push('/home/register')
       }
+    },
+    exit() {
+      // 刷新当前网站
+      window.location.reload()
+      window.sessionStorage.clear()
     }
   },
   computed: {
@@ -167,6 +174,7 @@ a {
 .header-right {
   float: right;
 }
+
 .navbar {
   margin-bottom: none !important;
 }

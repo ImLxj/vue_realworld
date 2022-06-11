@@ -20,7 +20,7 @@ export default {
   border-radius: 10px;
   margin: 20px auto;
   position: fixed;
-  top: 0px;
+  top: 30px;
   left: 50%;
   transform: translateX(-50%);
   animation: bounced 1s linear forwards;

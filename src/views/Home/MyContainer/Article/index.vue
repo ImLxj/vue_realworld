@@ -41,32 +41,18 @@
         <span>Read more...</span>
       </a>
     </div>
+    <Pagination
+      :pageNum="pageNum"
+      :pageSize="pageSize"
+      :total="articlesCount"
+      :continues="5"
+      @getPageNum="getPageNum"
+    />
     <template>
       <div v-for="(count, index) in clickCount" :key="index + 'article'">
         <Bounced v-if="isLogin" :message="message" />
       </div>
     </template>
-    <div class="pagination">
-      <div class="container">
-        <div>
-          <button class="on">上一页</button>
-        </div>
-
-        <div class="pagination-content">
-          <button class="center">1</button>
-          <button class="center">...</button>
-          <button class="center">2</button>
-          <button class="center">3</button>
-          <button class="center">4</button>
-          <button class="center">...</button>
-          <button class="center">8</button>
-        </div>
-
-        <div>
-          <button class="next">下一页</button>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -74,20 +60,26 @@
 import { mapState } from 'vuex'
 import Bounced from '@/components/Bounced'
 import { reqUpdateArticle } from '@/api/axios'
+import Pagination from '@/components/Pagination'
 export default {
   name: 'Tabs',
-  components: { Bounced },
+  components: { Bounced, Pagination },
   data() {
     return {
       animation: 'allArticle',
       isLogin: false,
       message: '请登录',
-      clickCount: 0
+      clickCount: 0,
+      pageNum: 1, // 当前页数
+      pageSize: 3 // 一页显示几条
     }
   },
   mounted() {
     this.$refs.allArticle.style.color = '#5cb85c'
-    this.$store.dispatch('getArticleList')
+    this.$store.dispatch('getArticleList', {
+      limit: this.pageSize,
+      offset: (this.pageNum - 1) * this.pageSize
+    })
   },
   // tabs 颜色切换
   methods: {
@@ -105,7 +97,12 @@ export default {
         this.clickCount += 1
         return
       }
-      this.$store.dispatch('getUserArticle', authorId)
+      this.pageNum = 1
+      this.$store.dispatch('getArticleList', {
+        limit: this.pageSize,
+        offset: (this.pageNum - 1) * this.pageSize,
+        author: this.userInfo.username
+      })
       this.animation = 'myArticle'
       e.target.style.color = '#5cb85c'
       this.$refs.allArticle.style.color = ''
@@ -116,7 +113,11 @@ export default {
       this.animation = 'allArticle'
       e.target.style.color = '#5cb85c'
       this.$refs.myArticle.style.color = ''
-      this.$store.dispatch('getArticleList')
+      this.pageNum = 1
+      this.$store.dispatch('getArticleList', {
+        limit: this.pageSize,
+        offset: (this.pageNum - 1) * this.pageSize
+      })
     },
     articleContent() {
       this.$router.push({
@@ -153,12 +154,28 @@ export default {
         }
       })
       this.isLogin = false
+    },
+    getPageNum(page) {
+      this.pageNum = page
+      if (this.animation === 'allArticle') {
+        this.$store.dispatch('getArticleList', {
+          limit: this.pageSize,
+          offset: (this.pageNum - 1) * this.pageSize
+        })
+      } else {
+        this.$store.dispatch('getArticleList', {
+          limit: this.pageSize,
+          offset: (this.pageNum - 1) * this.pageSize,
+          author: this.userInfo.username
+        })
+      }
     }
   },
   computed: {
     ...mapState({
       articleList: (state) => state.article.articleList,
-      userInfo: (state) => state.user.userInfo
+      userInfo: (state) => state.user.userInfo,
+      articlesCount: (state) => state.article.articlesCount
     })
   }
 }
@@ -285,50 +302,6 @@ export default {
   }
   .preview-link:hover {
     text-decoration: none;
-  }
-}
-.pagination {
-  width: 100%;
-  height: 60px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 15px;
-  .container {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 512px;
-    button {
-      outline: none;
-      box-sizing: border-box;
-      border: none;
-      background: #f3f3f3;
-    }
-    .center {
-      width: 40px;
-      height: 40px;
-      margin-left: 2px;
-      box-sizing: border-box;
-      // border: 0.5px solid rgba(0, 0, 0, 0.5) !important;
-      font-size: 20px;
-      text-align: center;
-      line-height: 40px;
-    }
-    .on,
-    .next {
-      height: 40px;
-      text-align: center;
-      line-height: 40px;
-    }
-    button:hover {
-      background: #5cb85c;
-    }
-  }
-  .pagination-content {
-    width: 295px;
-    height: 40px;
-    overflow: hidden;
   }
 }
 </style>
