@@ -1,29 +1,26 @@
 <template>
-  <div class="bounced">{{ message }}</div>
+  <div :class="['bounced', 'alert', type]" role="alert">{{ message }}</div>
 </template>
 
 <script>
 export default {
   name: 'Bounced',
-  props: ['message']
+  props: ['message', 'type']
 }
 </script>
 
 <style lang="less" scoped>
 .bounced {
-  width: 350px;
+  width: 400px;
   height: 60px;
   text-align: center;
-  line-height: 60px;
-  background-color: gray;
-  color: aliceblue;
-  border-radius: 10px;
+  line-height: 30px;
   margin: 20px auto;
   position: fixed;
   top: 30px;
   left: 50%;
   transform: translateX(-50%);
-  animation: bounced 1s linear forwards;
+  animation: bounced 1s ease-out forwards;
 }
 @keyframes bounced {
   0% {

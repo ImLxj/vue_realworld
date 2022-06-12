@@ -37,10 +37,19 @@
       <div class="clear"></div>
       <a href="" class="preview-link" @click.prevent="sendArticle(item)">
         <h1>{{ item.title }}</h1>
-        <p>{{ item.description }}</p>
-        <span>Read more...</span>
+        <p>{{ item.body }}</p>
+        <div class="bottom">
+          <span>Read more...</span>
+          <span
+            class="tagList"
+            v-for="(tag, index) in item.tagList"
+            :key="index + 'tag'"
+            >{{ tag }}</span
+          >
+        </div>
       </a>
     </div>
+    <!-- 分页器 -->
     <Pagination
       :pageNum="pageNum"
       :pageSize="pageSize"
@@ -48,9 +57,10 @@
       :continues="5"
       @getPageNum="getPageNum"
     />
+    <!-- 警告框 -->
     <template>
       <div v-for="(count, index) in clickCount" :key="index + 'article'">
-        <Bounced v-if="isLogin" :message="message" />
+        <Bounced v-if="isLogin" :message="message" :type="type" />
       </div>
     </template>
   </div>
@@ -69,6 +79,7 @@ export default {
       animation: 'allArticle',
       isLogin: false,
       message: '请登录',
+      type: 'alert-danger',
       clickCount: 0,
       pageNum: 1, // 当前页数
       pageSize: 3 // 一页显示几条
@@ -155,6 +166,7 @@ export default {
       })
       this.isLogin = false
     },
+    // 分页器
     getPageNum(page) {
       this.pageNum = page
       if (this.animation === 'allArticle') {
@@ -222,9 +234,9 @@ export default {
   }
 }
 .article-preview {
-  padding: 20px 0 20px 0;
+  padding: 20px 0 6px 0;
   border-bottom: 2px solid #f3f3f3;
-  margin-bottom: 10px;
+  // margin-bottom: 10px;
   .article-meta {
     width: 100%;
     position: relative;
@@ -287,17 +299,36 @@ export default {
     padding: 5px 2px 0px 5px;
     h1 {
       padding: 0px;
-      margin: 0px 0 15px 0;
-      font-size: 30px;
+      margin: 0px 0 8px 0;
+      font-size: 22px;
       color: #373a3c;
+      font-weight: bold;
     }
     p {
       color: rgba(0, 0, 0, 0.5);
+      width: 100%;
+      height: 20px;
+      overflow: hidden;
+      margin-bottom: 8px;
     }
     span {
       margin-top: 5px;
       color: rgba(0, 0, 0, 0.4);
       font-size: 12px;
+    }
+    .bottom {
+      height: 30px;
+      line-height: 30px;
+      .tagList {
+        float: right;
+        border: 0.5px solid rgba(0, 0, 0, 0.4);
+        margin-left: 8px;
+        border-radius: 5px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        padding: 0px 10px 0px 10px;
+      }
     }
   }
   .preview-link:hover {

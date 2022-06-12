@@ -9,6 +9,7 @@ import Login from '../views/Home/Login'
 import Register from '../views/Home/Register'
 import MyArticle from '../views/Home/MyContainer/MyArticle'
 import Setting from '../views/Home/Setting'
+import Information from '../views/Home/Information'
 
 // 先保存push 和 replace 方法
 const originPush = VueRouter.prototype.push
@@ -84,6 +85,7 @@ const routes = [
         path: 'myarticle',
         name: 'myarticle',
         component: MyArticle,
+        // meta: { validator: true },
         // 判断是否是点击跳转的 如果不是点击跳转的则还是当前页面
         beforeEnter: (to, from, next) => {
           if (!to.params.id) {
@@ -95,7 +97,21 @@ const routes = [
       {
         path: 'setting',
         name: 'setting',
-        component: Setting
+        component: Setting,
+        meta: { validator: true }
+      },
+      {
+        path: 'information',
+        name: 'information',
+        component: Information,
+        // meta: { validator: true },
+        beforeEnter: (to, from, next) => {
+          console.log(to.params._id)
+          if (!to.params._id) {
+            next('/home/container')
+          }
+          next()
+        }
       }
     ]
   }

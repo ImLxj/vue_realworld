@@ -1,7 +1,17 @@
 <template>
   <div class="container">
     <a class="navbar-brand header-title">文章博客</a>
-    <ul class="nav navbar-nav pull-xs-right header-right">
+   <!--  <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#collapsibleNavbar"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button> -->
+    <ul
+      class="nav navbar-nav collapse navbar-collapse pull-xs-right header-right"
+    >
       <li class="nav-item">
         <a
           :class="{ ['nav-link']: true, active: isIndex === 1 }"
@@ -22,7 +32,7 @@
           :class="{ ['nav-link']: true, active: isIndex === 3 }"
           @click="createArticle('setting', 3)"
         >
-          <i class="ion-gear-a"></i>&nbsp;我的资料
+          <i class="ion-gear-a"></i>&nbsp;修改信息
         </a>
       </li>
       <template v-if="!userInfo.username">
@@ -43,7 +53,7 @@
       </template>
       <template v-else>
         <li class="nav-item">
-          <a class="user-img" href="#">
+          <a @click.prevent="goInformation" class="user-img" href="#">
             <img :src="userInfo.image" alt="" />
           </a>
         </li>
@@ -57,7 +67,7 @@
     <!-- 提示弹框 -->
     <template>
       <div v-for="(count, index) in countClick" :key="index + 'header'">
-        <Bounced v-show="isBounced" :message="message" />
+        <Bounced v-show="isBounced" :message="message" :type="type" />
       </div>
     </template>
   </div>
@@ -74,7 +84,8 @@ export default {
       isBounced: false,
       message: '请登录',
       countClick: 0,
-      isIndex: 1
+      isIndex: 1,
+      type: 'alert-danger'
     }
   },
   methods: {
@@ -133,6 +144,16 @@ export default {
         this.$router.push('/home/register')
       }
     },
+    // 查看当前登录用户的个人信息
+    goInformation() {
+      this.$router.push({
+        name: 'information',
+        params: {
+          _id: this.userInfo._id
+        }
+      })
+    },
+    // 退出当前用户
     exit() {
       // 刷新当前网站
       window.location.reload()

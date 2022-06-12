@@ -9,7 +9,18 @@ const state = {
   articleInfo: {},
   articlesCount: 0
 }
-const getters = {}
+const getters = {
+  tagList(state) {
+    let tagList = ''
+    state.articleList.forEach((item, index) => {
+      tagList += item.tagList.join(',') + ','
+    })
+    tagList = tagList.slice(0, tagList.lastIndexOf(',')).split(',')
+    // 通过es6新语法 set 方法对数组进行去重
+    tagList = Array.from(new Set(tagList))
+    return tagList
+  }
+}
 const mutations = {
   GETARTICLELIST(state, data) {
     state.articleList = data.articles ? data.articles : data
