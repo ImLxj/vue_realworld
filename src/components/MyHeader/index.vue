@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <a class="navbar-brand header-title">文章博客</a>
-   <!--  <button
+    <!--  <button
       class="navbar-toggler"
       type="button"
       data-bs-toggle="collapse"
@@ -158,6 +158,7 @@ export default {
       // 刷新当前网站
       window.location.reload()
       window.sessionStorage.clear()
+      this.$router.push('home/container')
     }
   },
   computed: {
@@ -174,6 +175,7 @@ a {
 }
 .active {
   color: #000;
+  font-weight: 500;
 }
 .header-title {
   float: left;

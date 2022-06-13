@@ -88,3 +88,18 @@ export const reqGetLogin = (params) =>
 // 发送注册请求
 export const reqGetRegister = (params) =>
   instance.post('users', { user: params })
+
+// 发送修改个人信息请求
+export const reqUpdateUserInfo = (params) => {
+  const token = window.sessionStorage.getItem('token')
+  if (!token) return console.log('请登录')
+  console.log(params)
+  return instance({
+    method: 'PUT',
+    url: 'user',
+    data: {
+      userInfo: params
+    },
+    headers: { authorization: token }
+  })
+}

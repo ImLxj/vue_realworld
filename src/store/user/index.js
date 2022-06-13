@@ -1,4 +1,4 @@
-import { reqGetLogin } from '@/api/axios'
+import { reqGetLogin, reqUpdateUserInfo } from '@/api/axios'
 const state = {
   userInfo: {}
 }
@@ -16,6 +16,10 @@ const actions = {
       const token = `Bearer ${result.data.token}`
       window.sessionStorage.setItem('token', token)
     }
+  },
+  async updateUserInfo({ commit }, params) {
+    const result = await reqUpdateUserInfo(params)
+    console.log(result)
   }
 }
 
