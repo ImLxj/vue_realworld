@@ -2,11 +2,14 @@
   <div>
     <div class="feed-toggle">
       <ul class="nav nav-pills outline-active">
-        <li class="nav-item" @click="myArticle">
+        <li v-if="text1" class="nav-item" @click="myArticle">
           <a class="nav-link disabled" ref="myArticle">{{ text1 }}</a>
         </li>
-        <li class="nav-item" @click="allArticle">
+        <li v-if="text2" class="nav-item" @click="allArticle">
           <a class="nav-link" ref="allArticle">{{ text2 }}</a>
+        </li>
+        <li v-if="text3" class="nav-item" @click="loveArticle">
+          <a class="nav-link" ref="loveArticle">{{ text3 }}</a>
         </li>
       </ul>
       <div class="nprogress">
@@ -74,7 +77,7 @@ import Pagination from '@/components/Pagination'
 export default {
   name: 'Tabs',
   components: { Bounced, Pagination },
-  props: ['text1', 'text2'],
+  props: ['text1', 'text2', 'text3'],
   data() {
     return {
       animation: 'allArticle',
@@ -87,11 +90,22 @@ export default {
     }
   },
   mounted() {
-    this.$refs.allArticle.style.color = '#5cb85c'
-    this.$store.dispatch('getArticleList', {
-      limit: this.pageSize,
-      offset: (this.pageNum - 1) * this.pageSize
-    })
+    if (!this.text3) {
+      this.$refs.allArticle.style.color = '#5cb85c'
+      this.animation = 'allArticle'
+      this.$store.dispatch('getArticleList', {
+        limit: this.pageSize,
+        offset: (this.pageNum - 1) * this.pageSize
+      })
+    } else {
+      this.$refs.myArticle.style.color = '#5cb85c'
+      this.animation = 'myArticle'
+      this.$store.dispatch('getArticleList', {
+        limit: this.pageSize,
+        offset: (this.pageNum - 1) * this.pageSize,
+        author: this.userInfo.username
+      })
+    }
   },
   // tabs 颜色切换
   methods: {
@@ -117,7 +131,11 @@ export default {
       })
       this.animation = 'myArticle'
       e.target.style.color = '#5cb85c'
-      this.$refs.allArticle.style.color = ''
+      if (!this.text3) {
+        this.$refs.allArticle.style.color = ''
+      } else {
+        this.$refs.loveArticle.style.color = ''
+      }
       this.isLogin = false
       this.clickCount = 1
     },
@@ -130,6 +148,11 @@ export default {
         limit: this.pageSize,
         offset: (this.pageNum - 1) * this.pageSize
       })
+    },
+    loveArticle(e) {
+      this.animation = 'loveArticle'
+      e.target.style.color = '#5cb85c'
+      this.$refs.myArticle.style.color = ''
     },
     articleContent() {
       this.$router.push({
@@ -224,12 +247,17 @@ export default {
     }
     .allArticle {
       width: 86px;
-      left: 114px;
+      left: 86px;
       transition: all 0.5s;
     }
     .myArticle {
-      width: 114px;
+      width: 86px;
       left: 0px;
+      transition: all 0.5s;
+    }
+    .loveArticle {
+      width: 114px;
+      left: 86px;
       transition: all 0.5s;
     }
   }

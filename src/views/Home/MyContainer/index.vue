@@ -4,7 +4,7 @@
     <div class="container page">
       <div class="row">
         <div class="col-md-9">
-          <Article text1="我发布的文章" text2="全部文章" />
+          <Article text1="我的文章" text2="全部文章" />
         </div>
         <div class="col-md-3">
           <Tags />

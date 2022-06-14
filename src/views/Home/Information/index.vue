@@ -6,7 +6,6 @@
           <div class="col-xs-12 col-md-10 offset-md-1">
             <img :src="userInfo.image" class="user-img" />
             <h4>{{ userInfo.username }}</h4>
-            <p>{{ userInfo.bio }}</p>
             <button class="btn btn-sm btn-outline-secondary action-btn">
               <i class="ion-plus-round"></i>
               &nbsp; Follow Eric Simons
@@ -19,7 +18,7 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1">
-          <Article text1="我的文章" text2="我喜欢的文章" />
+          <Article text1="我的文章" text3="我喜欢的文章" />
         </div>
       </div>
     </div>
@@ -33,7 +32,6 @@ export default {
   name: 'Information',
   components: { Article },
   mounted() {
-    // this.$store.dispatch('otherUserInfo')
     this.$store.dispatch('getArticleList', { author: this.userInfo.username })
   },
   computed: {
