@@ -104,10 +104,8 @@ const routes = [
         path: 'information',
         name: 'information',
         component: Information,
-        // meta: { validator: true },
         beforeEnter: (to, from, next) => {
-          console.log(to.params._id)
-          if (!to.params._id) {
+          if (!to.params.author) {
             next('/home/container')
           }
           next()

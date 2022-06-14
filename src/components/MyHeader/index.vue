@@ -144,7 +144,7 @@ export default {
       this.$router.push({
         name: 'information',
         params: {
-          _id: this.userInfo._id
+          author: this.userInfo
         }
       })
     },

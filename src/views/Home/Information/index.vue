@@ -4,10 +4,10 @@
       <div class="container">
         <div class="row">
           <div class="col-xs-12 col-md-10 offset-md-1">
-            <img :src="userInfo.image" class="user-img" />
-            <h4>{{ userInfo.username }}</h4>
+            <img :src="image" class="user-img" />
+            <h4>{{ username }}</h4>
             <button class="btn btn-sm btn-outline-secondary action-btn">
-              <i class="ion-plus-round"></i>
+              <!-- <i class="ion-plus-round"></i> -->
               &nbsp; Follow Eric Simons
             </button>
           </div>
@@ -32,13 +32,20 @@ export default {
   name: 'Information',
   components: { Article },
   mounted() {
-    this.$store.dispatch('getArticleList', { author: this.userInfo.username })
+    this.$store.dispatch('getArticleList', {
+      author: this.$route.params.author.username
+    })
   },
   computed: {
     ...mapState({
-      userInfo: (state) => state.user.userInfo,
       articleList: (state) => state.article.articleList
-    })
+    }),
+    username() {
+      return this.$route.params.author.username
+    },
+    image() {
+      return this.$route.params.author.image
+    }
   }
 }
 </script>

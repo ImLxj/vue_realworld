@@ -22,7 +22,9 @@
       :key="index"
     >
       <div class="article-meta">
-        <a class="head-img" href="#"><img :src="item.author.image" /></a>
+        <a @click.prevent="goInformation(item.author)" class="head-img" href="#"
+          ><img :src="item.author.image"
+        /></a>
         <div class="info">
           <a @click="articleContent" class="author">{{
             item.author.username
@@ -103,7 +105,7 @@ export default {
       this.$store.dispatch('getArticleList', {
         limit: this.pageSize,
         offset: (this.pageNum - 1) * this.pageSize,
-        author: this.userInfo.username
+        author: this.$route.params.username
       })
     }
   },
@@ -123,19 +125,24 @@ export default {
         this.clickCount += 1
         return
       }
-      this.pageNum = 1
-      this.$store.dispatch('getArticleList', {
-        limit: this.pageSize,
-        offset: (this.pageNum - 1) * this.pageSize,
-        author: this.userInfo.username
-      })
       this.animation = 'myArticle'
       e.target.style.color = '#5cb85c'
       if (!this.text3) {
+        this.$store.dispatch('getArticleList', {
+          limit: this.pageSize,
+          offset: (this.pageNum - 1) * this.pageSize,
+          author: this.userInfo.username
+        })
         this.$refs.allArticle.style.color = ''
       } else {
         this.$refs.loveArticle.style.color = ''
+        this.$store.dispatch('getArticleList', {
+          limit: this.pageSize,
+          offset: (this.pageNum - 1) * this.pageSize,
+          author: this.$route.params.author.username
+        })
       }
+      this.pageNum = 1
       this.isLogin = false
       this.clickCount = 1
     },
@@ -205,6 +212,15 @@ export default {
           author: this.userInfo.username
         })
       }
+    },
+    // 跳转到用户资料页面
+    goInformation(author) {
+      this.$router.push({
+        name: 'information',
+        params: {
+          author
+        }
+      })
     }
   },
   computed: {

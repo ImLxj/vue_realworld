@@ -19,10 +19,6 @@ const actions = {
       const token = `Bearer ${result.data.token}`
       window.sessionStorage.setItem('token', token)
     }
-  },
-  async otherUserInfo({ commit }) {
-    const result = await reqUserInfo()
-    console.log(result)
   }
   /* async updateUserInfo({ commit }, params) {
     const result = await reqUpdateUserInfo(params)

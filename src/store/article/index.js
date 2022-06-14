@@ -41,9 +41,6 @@ const actions = {
   // 获取当前登录用户发布的文章
   async getUserArticle(context, authorId) {
     const result = await reqGetUserArticle(authorId)
-    if (!result) {
-      return console.log('没有返回任何数据')
-    }
     if (result.status === 200) {
       context.commit('GETARTICLELIST', result.data)
     }
