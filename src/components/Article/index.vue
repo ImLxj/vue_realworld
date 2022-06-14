@@ -3,10 +3,10 @@
     <div class="feed-toggle">
       <ul class="nav nav-pills outline-active">
         <li class="nav-item" @click="myArticle">
-          <a class="nav-link disabled" ref="myArticle">我发布的文章</a>
+          <a class="nav-link disabled" ref="myArticle">{{ text1 }}</a>
         </li>
         <li class="nav-item" @click="allArticle">
-          <a class="nav-link" ref="allArticle">全部文章</a>
+          <a class="nav-link" ref="allArticle">{{ text2 }}</a>
         </li>
       </ul>
       <div class="nprogress">
@@ -35,7 +35,7 @@
         </button>
       </div>
       <div class="clear"></div>
-      <a href="" class="preview-link" @click.prevent="sendArticle(item)">
+      <a href="#" class="preview-link" @click.prevent="sendArticle(item)">
         <h1>{{ item.title }}</h1>
         <p>{{ item.body }}</p>
         <div class="bottom">
@@ -74,6 +74,7 @@ import Pagination from '@/components/Pagination'
 export default {
   name: 'Tabs',
   components: { Bounced, Pagination },
+  props: ['text1', 'text2'],
   data() {
     return {
       animation: 'allArticle',

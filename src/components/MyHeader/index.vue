@@ -54,12 +54,7 @@
       <template v-else>
         <li class="nav-item">
           <a @click.prevent="goInformation" class="user-img" href="#">
-            <img :src="userInfo.image" alt="" />
-          </a>
-        </li>
-        <li class="nav-item">
-          <a @click.prevent="exit" href="#">
-            <span>退出</span>
+            <span>{{ userInfo.username }}</span>
           </a>
         </li>
       </template>

@@ -93,13 +93,23 @@ export const reqGetRegister = (params) =>
 export const reqUpdateUserInfo = (params) => {
   const token = window.sessionStorage.getItem('token')
   if (!token) return console.log('请登录')
-  console.log(params)
   return instance({
     method: 'PUT',
     url: 'user',
     data: {
       userInfo: params
     },
+    headers: { authorization: token }
+  })
+}
+
+// 发送获取当前登录用户的个人信息
+export const reqUserInfo = () => {
+  const token = window.sessionStorage.getItem('token')
+  if (!token) return console.log('请登录')
+  return instance({
+    method: 'GET',
+    url: 'user',
     headers: { authorization: token }
   })
 }

@@ -67,46 +67,65 @@
 
 <script>
 import { mapState } from 'vuex'
-import { rulesEmail, rulesPassword } from '@/views/Home/rules'
+import { reqUpdateUserInfo } from '@/api/axios'
 export default {
   name: 'Setting',
   data() {
     return {
       emValidator: false,
-      pawValidator: false
+      pawValidator: false,
+      imgUrl: ''
     }
   },
   methods: {
     uploadInfo() {
       const files = this.$refs.imageRef.files[0]
-      let imgUrl = ''
       const _this = this
       if (files) {
         const reader = new FileReader()
         reader.readAsDataURL(files)
-        reader.onload = function () {
-          imgUrl = this.result
-          const userInfo = {
-            username: _this.userInfo.username,
-            bio: _this.userInfo.bio,
-            email: _this.userInfo.email,
-            image: imgUrl
-          }
-          _this.$store.dispatch('updateUserInfo', userInfo)
+        reader.onload = async function () {
+          _this.imgUrl = this.result
+          // 如果要修改头像的话，vuex仓库里面的也要被修改，因为显示的头像是在vuex仓库里面的
+          // _this.userInfo.image = this.result
         }
       }
+      this.updateUserInfo()
+      // alert('修改成功')
+      // this.$router.push('/home/container')
     },
     rulesEmail() {
       // this.emValidator = rulesEmail(this.$refs.emailRef.value)
     },
     rulesPassword() {
       // this.pawValidator = rulesPassword(this.$refs.passwordRef.value)
+    },
+    // 处理修改个人信息的函数
+    async updateUserInfo() {
+      const userInfo = {
+        username: this.userInfo.username,
+        bio: this.userInfo.bio,
+        email: this.userInfo.email,
+        image: this.imgUrl
+      }
+      const result = await reqUpdateUserInfo(userInfo)
+      if (result.status === 200) {
+        this.$store.commit('UPDATEUSERINFO', result.data.user)
+        setTimeout(() => {
+          this.$router.push('/home/container')
+        }, 500)
+      }
     }
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo
     })
+  },
+  watch: {
+    imgUrl() {
+      this.updateUserInfo()
+    }
   }
 }
 </script>

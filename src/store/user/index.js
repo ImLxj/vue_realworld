@@ -1,10 +1,13 @@
-import { reqGetLogin, reqUpdateUserInfo } from '@/api/axios'
+import { reqGetLogin, reqUserInfo } from '@/api/axios'
 const state = {
   userInfo: {}
 }
 const getters = {}
 const mutations = {
   GETUSERLOGIN(state, data) {
+    state.userInfo = data
+  },
+  UPDATEUSERINFO(state, data) {
     state.userInfo = data
   }
 }
@@ -17,10 +20,17 @@ const actions = {
       window.sessionStorage.setItem('token', token)
     }
   },
-  async updateUserInfo({ commit }, params) {
-    const result = await reqUpdateUserInfo(params)
+  async otherUserInfo({ commit }) {
+    const result = await reqUserInfo()
     console.log(result)
   }
+  /* async updateUserInfo({ commit }, params) {
+    const result = await reqUpdateUserInfo(params)
+    console.log(result)
+    if (result.status === 200) {
+      commit('UPDATEUSERINFO', result.data.user)
+    }
+  } */
 }
 
 export default {
