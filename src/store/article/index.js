@@ -1,8 +1,4 @@
-import {
-  reqGetArticle,
-  reqGetUserArticle,
-  reqCurrentArticle
-} from '@/api/axios'
+import { reqGetArticle, reqCurrentArticle } from '@/api/axios'
 
 const state = {
   articleList: [],
@@ -25,9 +21,6 @@ const mutations = {
   GETARTICLELIST(state, data) {
     state.articleList = data.articles ? data.articles : data
     state.articlesCount = data.articlesCount
-  },
-  GETCOMMENT(state, data) {
-    state.articleInfo = data.article
   }
 }
 const actions = {
@@ -36,20 +29,6 @@ const actions = {
     const result = await reqGetArticle(option)
     if (result.status === 200) {
       context.commit('GETARTICLELIST', result.data)
-    }
-  },
-  // 获取当前登录用户发布的文章
-  async getUserArticle(context, authorId) {
-    const result = await reqGetUserArticle(authorId)
-    if (result.status === 200) {
-      context.commit('GETARTICLELIST', result.data)
-    }
-  },
-  // 获取评论信息
-  async getComment(context, option) {
-    const result = await reqCurrentArticle(option)
-    if (result.status === 201) {
-      context.commit('GETCOMMENT', result.data)
     }
   }
 }

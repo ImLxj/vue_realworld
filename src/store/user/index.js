@@ -1,4 +1,4 @@
-import { reqGetLogin, reqUserInfo } from '@/api/axios'
+import { reqGetLogin } from '@/api/axios'
 const state = {
   userInfo: {}
 }
@@ -20,13 +20,6 @@ const actions = {
       window.sessionStorage.setItem('token', token)
     }
   }
-  /* async updateUserInfo({ commit }, params) {
-    const result = await reqUpdateUserInfo(params)
-    console.log(result)
-    if (result.status === 200) {
-      commit('UPDATEUSERINFO', result.data.user)
-    }
-  } */
 }
 
 export default {

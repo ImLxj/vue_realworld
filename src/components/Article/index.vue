@@ -215,10 +215,14 @@ export default {
     },
     // 跳转到用户资料页面
     goInformation(author) {
+      //
       this.$router.push({
         name: 'information',
         params: {
           author
+        },
+        query: {
+          t: Date.now()
         }
       })
     }

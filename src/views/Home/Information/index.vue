@@ -32,9 +32,14 @@ export default {
   name: 'Information',
   components: { Article },
   mounted() {
-    this.$store.dispatch('getArticleList', {
-      author: this.$route.params.author.username
-    })
+    this.getArticleList()
+  },
+  methods: {
+    getArticleList() {
+      this.$store.dispatch('getArticleList', {
+        author: this.$route.params.author.username
+      })
+    }
   },
   computed: {
     ...mapState({
@@ -46,6 +51,20 @@ export default {
     image() {
       return this.$route.params.author.image
     }
+  },
+  beforeRouteEnter(to, from, next) {
+    console.log(to.params)
+    next()
+  },
+  // 现在这个时候路由里面的params参数还是之前的
+  beforeRouteUpdate(to, from, next) {
+    // 如果不加nextTick的话，点击第一下跳转当前路由这时的username还是之前的没有发生改变然后请求就发送出去了，加上nextTick的作用就是等username改变之后在发送请求
+    this.$nextTick(function () {
+      this.$store.dispatch('getArticleList', {
+        author: this.$route.params.author.username
+      })
+    })
+    next()
   }
 }
 </script>

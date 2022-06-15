@@ -4,7 +4,6 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home'
 import MyContainer from '../views/Home/MyContainer'
 import CreateArticle from '../views/Home/CreateArticle'
-import MyProfile from '../views/Home/MyProfile'
 import Login from '../views/Home/Login'
 import Register from '../views/Home/Register'
 import MyArticle from '../views/Home/MyContainer/MyArticle'
@@ -66,12 +65,6 @@ const routes = [
         meta: { validator: true }
       },
       {
-        path: 'myprofile',
-        name: 'myprofile',
-        component: MyProfile,
-        meta: { validator: true }
-      },
-      {
         path: 'login',
         name: 'login',
         component: Login
@@ -105,6 +98,7 @@ const routes = [
         name: 'information',
         component: Information,
         beforeEnter: (to, from, next) => {
+          console.log('@@', to.params)
           if (!to.params.author) {
             next('/home/container')
           }

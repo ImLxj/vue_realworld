@@ -145,6 +145,9 @@ export default {
         name: 'information',
         params: {
           author: this.userInfo
+        },
+        query: {
+          t: Date.now()
         }
       })
     },

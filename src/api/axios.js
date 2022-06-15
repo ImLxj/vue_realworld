@@ -9,17 +9,6 @@ export const reqGetArticle = (option) => {
   })
 }
 
-// 发送获取当前用户文章请求
-export const reqGetUserArticle = (authorId) => {
-  const token = window.sessionStorage.getItem('token')
-  if (!token) return console.log('请登录')
-  return instance({
-    url: `articles/feed/${authorId}`,
-    method: 'GET',
-    headers: { authorization: token }
-  })
-}
-
 // 发送创建文章的请求
 export const reqCreateArticle = (articleInfo) => {
   const token = window.sessionStorage.getItem('token')
@@ -47,14 +36,6 @@ export const reqUpdateArticle = (article) => {
 
 // 添加评论
 export const reqCurrentArticle = (option) => {
-  delete option.userInfo.bio
-  delete option.userInfo.email
-  delete option.userInfo.token
-  const userInfo = [
-    option.userInfo._id,
-    option.userInfo.username,
-    option.userInfo.image
-  ]
   const token = window.sessionStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
@@ -63,12 +44,16 @@ export const reqCurrentArticle = (option) => {
     data: {
       comment: {
         body: option.comment,
-        userInfo
+        author: option.author
       }
     },
     headers: { authorization: token }
   })
 }
+
+// 获取评论
+export const reqComments = (articleId) =>
+  instance(`articles/${articleId}/comments`)
 
 // 获取文章
 export const reqArticle = (articleId) => {
