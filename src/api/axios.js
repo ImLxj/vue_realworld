@@ -44,7 +44,8 @@ export const reqCurrentArticle = (option) => {
     data: {
       comment: {
         body: option.comment,
-        author: option.author
+        author: option.author,
+        articleId: option.articleId
       }
     },
     headers: { authorization: token }

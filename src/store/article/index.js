@@ -1,4 +1,4 @@
-import { reqGetArticle, reqCurrentArticle } from '@/api/axios'
+import { reqGetArticle } from '@/api/axios'
 
 const state = {
   articleList: [],

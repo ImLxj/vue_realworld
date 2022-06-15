@@ -30,10 +30,10 @@
         </div>
         <div class="card-footer">
           <a href="" class="comment-author">
-            <img :src="item.author[2]" class="comment-author-img" />
+            <img :src="item.author.image" class="comment-author-img" />
           </a>
           &nbsp;
-          <a href="" class="comment-author">{{ item.author[1] }}</a>
+          <a href="" class="comment-author">{{ item.author.username }}</a>
           <span class="date-posted">{{ item.createdAt | timer }}</span>
         </div>
       </div>
@@ -59,9 +59,8 @@ export default {
       const result = await reqCurrentArticle({
         id: this.$route.params.id,
         comment: this.commentCenter,
-        author: {
-          username: this.$store.state.user.userInfo.username
-        }
+        author: this.$store.state.user.userInfo._id,
+        articleId: this.$route.params.id
       })
       this.commentCenter = ''
       if (result.status === 201) {

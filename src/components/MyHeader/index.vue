@@ -32,7 +32,7 @@
           :class="{ ['nav-link']: true, active: isIndex === 3 }"
           @click="createArticle('setting', 3)"
         >
-          <i class="ion-gear-a"></i>&nbsp;修改信息
+          <i class="glyphicon glyphicon-pencil"></i>&nbsp;修改信息
         </a>
       </li>
       <template v-if="!userInfo.username">
