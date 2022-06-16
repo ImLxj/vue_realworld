@@ -1,7 +1,7 @@
 <template>
   <div class="sidebar">
     <p>Popular Tags</p>
-    <div class="tag-list">
+    <div class="tag-list" v-if="tagList">
       <a href="#" class="" v-for="(tag, index) in tagList" :key="index">{{
         tag
       }}</a>

@@ -24,12 +24,23 @@ export const reqCreateArticle = (articleInfo) => {
 }
 
 // 我喜欢的文章
-export const reqUpdateArticle = (article) => {
+export const reqFavorite = (article) => {
   const token = window.sessionStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     url: `articles/${article._id}/favorite`,
     method: 'POST',
+    headers: { authorization: token }
+  })
+}
+
+// 我不喜欢的文章
+export const reqUnFavorite = (article) => {
+  const token = window.sessionStorage.getItem('token')
+  if (!token) return console.log('请登录')
+  return instance({
+    url: `articles/${article._id}/favorite`,
+    method: 'DELETE',
     headers: { authorization: token }
   })
 }

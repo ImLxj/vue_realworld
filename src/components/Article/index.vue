@@ -32,10 +32,16 @@
           <span class="date">{{ item.createdAt | timer }}</span>
         </div>
         <button
-          class="btn btn-outline-primary btn-sm pull-xs-right"
+          :class="[
+            'btn',
+            'btn-outline-primary',
+            'btn-sm',
+            'pull-xs-right',
+            { btnActive: favorite(item) }
+          ]"
           @click="sumFavorites(item)"
         >
-          <i class="glyphicon glyphicon-heart-empty"></i>
+          <i class="glyphicon glyphicon-heart-empty active"></i>
           {{ item.favoritesCount }}
         </button>
       </div>
@@ -74,7 +80,7 @@
 <script>
 import { mapState } from 'vuex'
 import Bounced from '@/components/Bounced'
-import { reqUpdateArticle } from '@/api/axios'
+import { reqFavorite, reqUnFavorite } from '@/api/axios'
 import Pagination from '@/components/Pagination'
 export default {
   name: 'Tabs',
@@ -88,7 +94,7 @@ export default {
       type: 'alert-danger',
       clickCount: 0,
       pageNum: 1, // 当前页数
-      pageSize: 3 // 一页显示几条
+      pageSize: 8 // 一页显示几条
     }
   },
   mounted() {
@@ -167,19 +173,29 @@ export default {
       })
     },
     // 给文章点赞
-    async sumFavorites(article) {
+    async sumFavorites(item) {
       if (!this.userInfo._id || !window.sessionStorage.getItem('token')) {
         this.message = '请登录'
         this.isLogin = true
         this.clickCount += 1
         return
       }
-      article.favoritesCount++
-      const result = await reqUpdateArticle(article)
-      if (result.status === 200) {
-        console.log('操作成功')
-        this.isLogin = false
+      const isFavorite = this.favorite(item)
+      if (!isFavorite) {
+        const result = await reqFavorite(item)
+        if (result.status === 200) {
+          this.isLogin = false
+        }
+      } else {
+        const result = await reqUnFavorite(item)
+        if (result.status === 200) {
+          this.isLogin = false
+        }
       }
+      this.$store.dispatch('getArticleList', {
+        limit: this.pageSize,
+        offset: (this.pageNum - 1) * this.pageSize
+      })
     },
     // 跳转到文章具体内容页面
     sendArticle(articleInfo) {
@@ -225,6 +241,10 @@ export default {
           t: Date.now()
         }
       })
+    },
+    // 判断文章是是否被当前用户喜欢
+    favorite(item) {
+      return item.favorite.includes(this.userInfo._id)
     }
   },
   computed: {
@@ -334,6 +354,13 @@ export default {
       }
     }
     button:hover {
+      background: #5cb85c;
+      color: white;
+      i {
+        color: white;
+      }
+    }
+    .btnActive {
       background: #5cb85c;
       color: white;
       i {
