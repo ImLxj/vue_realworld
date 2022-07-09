@@ -1,14 +1,8 @@
 <template>
   <div class="container">
-    <a class="navbar-brand header-title">文章博客</a>
-    <!--  <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#collapsibleNavbar"
+    <router-link class="navbar-brand header-title" to="/home/container"
+      >文章博客</router-link
     >
-      <span class="navbar-toggler-icon"></span>
-    </button> -->
     <ul
       class="nav navbar-nav collapse navbar-collapse pull-xs-right header-right"
     >
@@ -35,7 +29,7 @@
           <i class="glyphicon glyphicon-pencil"></i>&nbsp;修改信息
         </a>
       </li>
-      <template v-if="!userInfo.username">
+      <template v-if="isUser">
         <li class="nav-item">
           <a
             :class="{ ['nav-link']: true, active: isIndex === 4 }"
@@ -54,7 +48,7 @@
       <template v-else>
         <li class="nav-item">
           <a @click.prevent="goInformation" class="user-img" href="#">
-            <span>{{ userInfo.username }}</span>
+            <span>{{ username }}</span>
           </a>
         </li>
       </template>
@@ -80,7 +74,8 @@ export default {
       message: '请登录',
       countClick: 0,
       isIndex: 1,
-      type: 'alert-danger'
+      type: 'alert-danger',
+      username: window.localStorage.getItem('username')
     }
   },
   methods: {
@@ -88,7 +83,7 @@ export default {
       // 点击创建文章
       if (str === 'article') {
         if (
-          !window.sessionStorage.getItem('token') ||
+          !window.localStorage.getItem('token') ||
           !this.$store.state.user.userInfo._id
         ) {
           this.isBounced = true
@@ -106,7 +101,7 @@ export default {
       // 点击我的资料
       if (str === 'setting') {
         if (
-          !window.sessionStorage.getItem('token') ||
+          !window.localStorage.getItem('token') ||
           !this.$store.state.user.userInfo._id
         ) {
           this.isBounced = true
@@ -139,6 +134,7 @@ export default {
         this.$router.push('/home/register')
       }
     },
+    // 看看当前用户是否登录成功
     // 查看当前登录用户的个人信息
     goInformation() {
       this.$router.push({
@@ -150,19 +146,17 @@ export default {
           t: Date.now()
         }
       })
-    },
-    // 退出当前用户
-    exit() {
-      // 刷新当前网站
-      window.location.reload()
-      window.sessionStorage.clear()
-      this.$router.push('home/container')
     }
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo
-    })
+    }),
+    isUser() {
+      const username = window.localStorage.getItem('username')
+      if (username === null) return true
+      return false
+    }
   }
 }
 </script>

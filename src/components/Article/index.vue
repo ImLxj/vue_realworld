@@ -54,6 +54,7 @@
           <span
             class="tagList"
             v-for="(tag, index) in item.tagList"
+            v-if="!item.tagList[0] == ''"
             :key="index + 'tag'"
             >{{ tag }}</span
           >
@@ -83,7 +84,7 @@ import Bounced from '@/components/Bounced'
 import { reqFavorite, reqUnFavorite } from '@/api/axios'
 import Pagination from '@/components/Pagination'
 export default {
-  name: 'Tabs',
+  name: 'Article',
   components: { Bounced, Pagination },
   props: ['text1', 'text2', 'text3'],
   data() {
@@ -118,7 +119,7 @@ export default {
   // tabs 颜色切换
   methods: {
     myArticle(e) {
-      if (!window.sessionStorage.getItem('token')) {
+      if (!window.localStorage.getItem('token')) {
         this.message = '请登录'
         this.isLogin = true
         this.clickCount += 1
@@ -174,7 +175,7 @@ export default {
     },
     // 给文章点赞
     async sumFavorites(item) {
-      if (!this.userInfo._id || !window.sessionStorage.getItem('token')) {
+      if (!this.userInfo._id || !window.localStorage.getItem('token')) {
         this.message = '请登录'
         this.isLogin = true
         this.clickCount += 1
@@ -199,7 +200,7 @@ export default {
     },
     // 跳转到文章具体内容页面
     sendArticle(articleInfo) {
-      if (!this.userInfo._id || !window.sessionStorage.getItem('token')) {
+      if (!this.userInfo._id || !window.localStorage.getItem('token')) {
         this.message = '请登录'
         this.isLogin = true
         this.clickCount += 1

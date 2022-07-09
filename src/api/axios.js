@@ -11,43 +11,40 @@ export const reqGetArticle = (option) => {
 
 // 发送创建文章的请求
 export const reqCreateArticle = (articleInfo) => {
-  const token = window.sessionStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     url: 'articles',
     method: 'POST',
     data: {
       article: articleInfo
-    },
-    headers: { authorization: token }
+    }
   })
 }
 
 // 我喜欢的文章
 export const reqFavorite = (article) => {
-  const token = window.sessionStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     url: `articles/${article._id}/favorite`,
-    method: 'POST',
-    headers: { authorization: token }
+    method: 'POST'
   })
 }
 
 // 我不喜欢的文章
 export const reqUnFavorite = (article) => {
-  const token = window.sessionStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     url: `articles/${article._id}/favorite`,
-    method: 'DELETE',
-    headers: { authorization: token }
+    method: 'DELETE'
   })
 }
 
 // 添加评论
 export const reqCurrentArticle = (option) => {
-  const token = window.sessionStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     method: 'POST',
@@ -58,8 +55,7 @@ export const reqCurrentArticle = (option) => {
         author: option.author,
         articleId: option.articleId
       }
-    },
-    headers: { authorization: token }
+    }
   })
 }
 
@@ -69,12 +65,11 @@ export const reqComments = (articleId) =>
 
 // 获取文章
 export const reqArticle = (articleId) => {
-  const token = window.sessionStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     method: 'GET',
-    url: `articles/${articleId}`,
-    headers: { authorization: token }
+    url: `articles/${articleId}`
   })
 }
 
@@ -88,25 +83,41 @@ export const reqGetRegister = (params) =>
 
 // 发送修改个人信息请求
 export const reqUpdateUserInfo = (params) => {
-  const token = window.sessionStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     method: 'PUT',
     url: 'user',
     data: {
       userInfo: params
-    },
-    headers: { authorization: token }
+    }
   })
 }
 
 // 发送获取当前登录用户的个人信息
 export const reqUserInfo = () => {
-  const token = window.sessionStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     method: 'GET',
-    url: 'user',
-    headers: { authorization: token }
+    url: 'user'
+  })
+}
+
+// 关注用户
+export const reqFollowing = (userId) => {
+  const token = window.localStorage.getItem('token')
+  if (!token) return console.log('请登录')
+  return instance({
+    method: 'POST',
+    url: `profiles/${userId}/follow`
+  })
+}
+
+// 获取个人资料
+export const reqProfiles = (userId) => {
+  return instance({
+    method: 'GET',
+    url: `profiles/${userId}`
   })
 }

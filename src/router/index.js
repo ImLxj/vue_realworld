@@ -116,7 +116,7 @@ const router = new VueRouter({
 // 配置全局路由守卫
 router.beforeEach((to, from, next) => {
   if (to.meta.validator) {
-    if (!window.sessionStorage.token) {
+    if (!window.localStorage.token) {
       return console.log('请登录')
     }
   }

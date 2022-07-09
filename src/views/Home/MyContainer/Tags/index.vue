@@ -2,7 +2,7 @@
   <div class="sidebar">
     <p>Popular Tags</p>
     <div class="tag-list" v-if="tagList">
-      <a href="#" class="" v-for="(tag, index) in tagList" :key="index">{{
+      <a href="#" class="" v-if="!tagList[0] == ''" v-for="(tag, index) in tagList" :key="index">{{
         tag
       }}</a>
     </div>
