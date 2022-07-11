@@ -112,7 +112,8 @@ export default {
       this.$store.dispatch('getArticleList', {
         limit: this.pageSize,
         offset: (this.pageNum - 1) * this.pageSize,
-        author: this.$route.params.username
+        author:
+          this.$route.params.username || window.localStorage.getItem('username')
       })
     }
   },
@@ -232,7 +233,6 @@ export default {
     },
     // 跳转到用户资料页面
     goInformation(author) {
-      //
       this.$router.push({
         name: 'information',
         params: {

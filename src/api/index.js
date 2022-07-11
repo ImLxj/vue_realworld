@@ -26,6 +26,13 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     nprogress.done()
+    if (response.data.error) {
+      window.localStorage.clear()
+      return {
+        status: 401,
+        message: '登录超时'
+      }
+    }
     return response
   },
   (error) => {

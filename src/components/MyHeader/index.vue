@@ -29,7 +29,7 @@
           <i class="glyphicon glyphicon-pencil"></i>&nbsp;修改信息
         </a>
       </li>
-      <template v-if="isUser">
+      <template v-if="!userInfo.username">
         <li class="nav-item">
           <a
             :class="{ ['nav-link']: true, active: isIndex === 4 }"
@@ -47,8 +47,13 @@
       </template>
       <template v-else>
         <li class="nav-item">
-          <a @click.prevent="goInformation" class="user-img" href="#">
-            <span>{{ username }}</span>
+          <a @click.prevent="goInformation" class="username" href="#">
+            <span>{{ userInfo.username }}</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a @click.prevent="exit" class="exit" href="#">
+            <span>退出</span>
           </a>
         </li>
       </template>
@@ -65,6 +70,8 @@
 <script>
 import { mapState } from 'vuex'
 import Bounced from '@/components/Bounced'
+import { reqUserInfo } from '@/api/axios'
+import { removeItem } from '@/utils/storage'
 export default {
   name: 'Header',
   components: { Bounced },
@@ -75,17 +82,14 @@ export default {
       countClick: 0,
       isIndex: 1,
       type: 'alert-danger',
-      username: window.localStorage.getItem('username')
+      isUsername: false
     }
   },
   methods: {
     createArticle(str) {
       // 点击创建文章
       if (str === 'article') {
-        if (
-          !window.localStorage.getItem('token') ||
-          !this.$store.state.user.userInfo._id
-        ) {
+        if (!window.localStorage.getItem('token')) {
           this.isBounced = true
           this.message = '请登录'
           this.countClick += 1
@@ -100,10 +104,7 @@ export default {
       }
       // 点击我的资料
       if (str === 'setting') {
-        if (
-          !window.localStorage.getItem('token') ||
-          !this.$store.state.user.userInfo._id
-        ) {
+        if (!window.localStorage.getItem('token')) {
           this.isBounced = true
           this.message = '请登录'
           this.countClick += 1
@@ -136,7 +137,20 @@ export default {
     },
     // 看看当前用户是否登录成功
     // 查看当前登录用户的个人信息
-    goInformation() {
+    async goInformation() {
+      const res = await reqUserInfo()
+      if (!res) {
+        this.isBounced = true
+        this.message = '请重新登录'
+        this.countClick += 1
+        return
+      }
+      if (res.status === 401) {
+        this.isBounced = true
+        this.message = '请重新登录'
+        this.countClick += 1
+        return
+      }
       this.$router.push({
         name: 'information',
         params: {
@@ -146,17 +160,18 @@ export default {
           t: Date.now()
         }
       })
+    },
+    // 退出当前用户
+    exit() {
+      removeItem() // 清除所有本地存储
+      this.$store.commit('GETUSERLOGIN', {}) // 清除仓库里面个人信息
+      this.$store.commit('SETTOKEN', '') // 清除仓库token
     }
   },
   computed: {
     ...mapState({
       userInfo: (state) => state.user.userInfo
-    }),
-    isUser() {
-      const username = window.localStorage.getItem('username')
-      if (username === null) return true
-      return false
-    }
+    })
   }
 }
 </script>
@@ -176,14 +191,9 @@ a {
   color: #5cb85c;
 }
 
-.user-img {
+.username {
   width: 50px;
   height: 50px;
-  img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-  }
 }
 
 .header-right {

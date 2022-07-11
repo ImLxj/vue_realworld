@@ -96,6 +96,7 @@ export const reqUpdateUserInfo = (params) => {
 
 // 发送获取当前登录用户的个人信息
 export const reqUserInfo = () => {
+  // 可以发送请求 判断当前token是否还能使用
   const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
