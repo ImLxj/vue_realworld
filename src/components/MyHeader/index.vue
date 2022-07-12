@@ -154,7 +154,9 @@ export default {
       this.$router.push({
         name: 'information',
         params: {
-          author: this.userInfo
+          author: this.userInfo,
+          pageSize: 3,
+          pageNum: 1
         },
         query: {
           t: Date.now()

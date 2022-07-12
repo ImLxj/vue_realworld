@@ -95,30 +95,34 @@ export default {
       type: 'alert-danger',
       clickCount: 0,
       pageNum: 1, // 当前页数
-      pageSize: 8 // 一页显示几条
+      pageSize: 3 // 一页显示几条
     }
   },
   mounted() {
-    if (!this.text3) {
-      this.$refs.allArticle.style.color = '#5cb85c'
-      this.animation = 'allArticle'
-      this.$store.dispatch('getArticleList', {
-        limit: this.pageSize,
-        offset: (this.pageNum - 1) * this.pageSize
-      })
-    } else {
-      this.$refs.myArticle.style.color = '#5cb85c'
-      this.animation = 'myArticle'
-      this.$store.dispatch('getArticleList', {
-        limit: this.pageSize,
-        offset: (this.pageNum - 1) * this.pageSize,
-        author:
-          this.$route.params.username || window.localStorage.getItem('username')
-      })
-    }
+    this.initArticles()
   },
   // tabs 颜色切换
   methods: {
+    initArticles() {
+      if (!this.text3) {
+        this.$refs.allArticle.style.color = '#5cb85c'
+        this.animation = 'allArticle'
+        this.$store.dispatch('getArticleList', {
+          limit: this.pageSize,
+          offset: (this.pageNum - 1) * this.pageSize
+        })
+      } else {
+        this.$refs.myArticle.style.color = '#5cb85c'
+        this.animation = 'myArticle'
+        this.$store.dispatch('getArticleList', {
+          limit: this.pageSize,
+          offset: (this.pageNum - 1) * this.pageSize,
+          author:
+            this.$route.params.username ||
+            window.localStorage.getItem('username')
+        })
+      }
+    },
     myArticle(e) {
       if (!window.localStorage.getItem('token')) {
         this.message = '请登录'
@@ -236,7 +240,9 @@ export default {
       this.$router.push({
         name: 'information',
         params: {
-          author
+          author,
+          pageSize: 3,
+          pageNum: 1
         },
         query: {
           t: Date.now()

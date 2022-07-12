@@ -55,6 +55,8 @@ export default {
   methods: {
     getArticleList() {
       this.$store.dispatch('getArticleList', {
+        limit: this.$route.params.pageSize,
+        offset: (this.$route.params.pageNum - 1) * this.$route.params.pageSize,
         author: this.$route.params.author.username
       })
     },
@@ -88,6 +90,7 @@ export default {
         this.profiles()
         return
       }
+      this.getArticleList()
       this.profilesInfo = to.params.author
     })
     next()

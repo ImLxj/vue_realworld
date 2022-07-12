@@ -98,7 +98,6 @@ const routes = [
         name: 'information',
         component: Information,
         beforeEnter: (to, from, next) => {
-          console.log('@@', to.params)
           if (!to.params.author) {
             next('/home/container')
           }

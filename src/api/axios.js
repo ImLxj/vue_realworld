@@ -22,7 +22,7 @@ export const reqCreateArticle = (articleInfo) => {
   })
 }
 
-// 我喜欢的文章
+// 添加我喜欢的文章
 export const reqFavorite = (article) => {
   const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
@@ -41,6 +41,8 @@ export const reqUnFavorite = (article) => {
     method: 'DELETE'
   })
 }
+
+// 获取所有该用户喜欢的文章
 
 // 添加评论
 export const reqCurrentArticle = (option) => {
