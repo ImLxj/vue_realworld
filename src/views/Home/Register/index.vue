@@ -65,7 +65,7 @@
 </template>
 
 <script>
-import { rulesEmail, rulesPassword, rulesUsername } from '@/views/Home/rules'
+import { rulesEmail, rulesPassword, rulesUsername } from '@/utils/rules'
 import { reqGetRegister } from '@/api/axios'
 import '@/assets/css/user-style.css'
 import Bounced from '@/components/Bounced'

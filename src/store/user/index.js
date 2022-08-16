@@ -23,7 +23,7 @@ const mutations = {
 const actions = {
   async getUserLogin({ commit }, params) {
     const result = await reqGetLogin(params)
-    if (result.status === 200) {
+    if (result.status === 200 && !result.data.errors) {
       commit('SETTOKEN', `Bearer ${result.data.token}`)
       commit('SETUSERNAME', result.data.username)
       commit('SETUSERID', result.data._id)

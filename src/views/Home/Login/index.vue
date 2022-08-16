@@ -15,8 +15,11 @@
                 placeholder="Email"
                 @blur="rulesEmail"
                 v-model="email"
+                autocomplete
               />
-              <span class="validator" v-show="emValidator">邮箱格式不正确</span>
+              <span class="validator" v-show="!emValidator"
+                >邮箱格式不正确</span
+              >
             </fieldset>
             <fieldset class="form-group">
               <input
@@ -26,9 +29,8 @@
                 @blur="rulesPassword"
                 autocomplete
                 v-model="password"
-                aut
               />
-              <span class="validator" v-show="pawValidator"
+              <span class="validator" v-show="!pawValidator"
                 >密码格式不正确</span
               >
             </fieldset>
@@ -44,14 +46,15 @@
     </div>
     <template>
       <div v-for="(count, index) in clickCount" :key="index + 'login'">
-        <Bounced v-if="isLogin" :message="message" />
+        <Bounced v-if="isLogin" :message="message" :type="type" />
       </div>
     </template>
   </div>
 </template>
 
 <script>
-import { rulesEmail, rulesPassword } from '@/views/Home/rules'
+import { rulesEmail, rulesPassword } from '@/utils/rules'
+import { mapState } from 'vuex'
 import Bounced from '@/components/Bounced'
 export default {
   name: 'Login',
@@ -60,38 +63,35 @@ export default {
     return {
       email: '1340482172@qq.com',
       password: '123456',
-      emValidator: false,
-      pawValidator: false,
+      emValidator: Boolean, // 邮箱校验
+      pawValidator: Boolean, // 密码校验
       isLogin: false,
       message: '请登录',
-      clickCount: 0
+      clickCount: 0,
+      type: 'alert-danger'
     }
   },
   methods: {
-    async getLogin() {
+    getLogin() {
       const user = {
         email: this.email,
         password: this.password
       }
-      // this.rulesEmail()
-      this.emValidator = rulesEmail(this.email)
-      this.pawValidator = rulesPassword(this.password)
-      if (!this.emValidator && !this.pawValidator) {
+      this.rulesEmail()
+      this.rulesPassword()
+      if (this.emValidator && this.pawValidator) {
         this.$store.dispatch('getUserLogin', user)
         setTimeout(() => {
-          // 判断是否登录成功
-          if (!this.$store.state.user.userInfo.username) {
-            this.message = '当前邮箱不存在,请注册之后在登录'
-            this.isLogin = true
+          if (this.errors.message) {
+            this.message = this.errors.message
             this.clickCount += 1
-            return false
+            this.isLogin = true
+          } else {
+            this.message = ''
+            this.clickCount = 0
+            this.isLogin = false
           }
-          this.$router.push({
-            name: 'container'
-          })
-          this.isLogin = false
-          this.clickCount = 0
-        }, 500)
+        }, 100)
       }
     },
     rulesEmail() {
@@ -100,6 +100,11 @@ export default {
     rulesPassword() {
       this.pawValidator = rulesPassword(this.password)
     }
+  },
+  computed: {
+    ...mapState({
+      errors: (state) => state.user.userInfo.errors
+    })
   }
 }
 </script>
