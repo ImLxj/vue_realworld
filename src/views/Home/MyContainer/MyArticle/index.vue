@@ -15,7 +15,8 @@
           </div>
           <button class="btn follow-btn btn-sm btn-outline-secondary">
             <i class="ion-plus-round"></i>
-            &nbsp; 关注我的人数 <span class="counter">(10)</span>
+            &nbsp; 关注我的人数
+            <span class="counter">{{ followingCount }}</span>
           </button>
           &nbsp;&nbsp;
           <button class="btn article-btn btn-sm btn-outline-primary">
@@ -85,6 +86,11 @@ export default {
       if (result.status === 200) {
         this.articleData = result.data.articleData
       }
+    }
+  },
+  computed: {
+    followingCount() {
+      return this.articleData.author.following.length
     }
   }
 }

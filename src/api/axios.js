@@ -1,5 +1,5 @@
 import instance from './index'
-
+const token = window.localStorage.getItem('token')
 // 发送文章请求
 export const reqGetArticle = (option) => {
   return instance({
@@ -11,7 +11,6 @@ export const reqGetArticle = (option) => {
 
 // 发送创建文章的请求
 export const reqCreateArticle = (articleInfo) => {
-  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     url: 'articles',
@@ -24,7 +23,6 @@ export const reqCreateArticle = (articleInfo) => {
 
 // 添加我喜欢的文章
 export const reqFavorite = (article) => {
-  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     url: `articles/${article._id}/favorite`,
@@ -34,7 +32,6 @@ export const reqFavorite = (article) => {
 
 // 我不喜欢的文章
 export const reqUnFavorite = (article) => {
-  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     url: `articles/${article._id}/favorite`,
@@ -46,7 +43,6 @@ export const reqUnFavorite = (article) => {
 
 // 添加评论
 export const reqCurrentArticle = (option) => {
-  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     method: 'POST',
@@ -67,7 +63,6 @@ export const reqComments = (articleId) =>
 
 // 获取文章
 export const reqArticle = (articleId) => {
-  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     method: 'GET',
@@ -85,7 +80,6 @@ export const reqGetRegister = (params) =>
 
 // 发送修改个人信息请求
 export const reqUpdateUserInfo = (params) => {
-  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     method: 'PUT',
@@ -99,7 +93,6 @@ export const reqUpdateUserInfo = (params) => {
 // 发送获取当前登录用户的个人信息
 export const reqUserInfo = () => {
   // 可以发送请求 判断当前token是否还能使用
-  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     method: 'GET',
@@ -109,11 +102,19 @@ export const reqUserInfo = () => {
 
 // 关注用户
 export const reqFollowing = (userId) => {
-  const token = window.localStorage.getItem('token')
   if (!token) return console.log('请登录')
   return instance({
     method: 'POST',
     url: `profiles/${userId}/follow`
+  })
+}
+
+// 取消关注用户
+export const reqUnFollowing = (otherId) => {
+  if (!token) return console.log('请登录')
+  return instance({
+    method: 'DELETE',
+    url: `profiles/${otherId}/follow`
   })
 }
 

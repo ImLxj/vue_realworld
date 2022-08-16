@@ -12,6 +12,7 @@ export default {
     this.user()
   },
   methods: {
+    // 如果本地存储当中有当前用户信息发起请求让用户仓库里面拥有信息
     async user() {
       const userId = window.localStorage.getItem('_id')
       if (userId === null) return

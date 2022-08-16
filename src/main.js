@@ -4,17 +4,15 @@ import router from './router'
 import axios from './api/index'
 import 'nprogress/nprogress.css'
 import store from './store'
-
+import { dateFormat } from './utils/dateFormat'
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 
 // 处理时间的过滤器
 Vue.filter('timer', function (value) {
   const jsonDate = new Date(value).toJSON()
-  return new Date(new Date(jsonDate) + 8 * 3600 * 1000)
-    .toISOString()
-    .replace(/T/g, ' ')
-    .replace(/\.[\d]{3}Z/, '')
+  const date = new Date(new Date(jsonDate) + 8 * 3600 * 1000)
+  return dateFormat(date)
 })
 
 // 删除空格的过滤器

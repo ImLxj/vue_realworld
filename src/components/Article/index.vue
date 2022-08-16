@@ -26,7 +26,7 @@
           ><img :src="item.author.image"
         /></a>
         <div class="info">
-          <a @click="articleContent" class="author">{{
+          <a @click.prevent="goInformation(item.author)" class="author">{{
             item.author.username
           }}</a>
           <span class="date">{{ item.createdAt | timer }}</span>
@@ -172,11 +172,6 @@ export default {
       this.animation = 'loveArticle'
       e.target.style.color = '#5cb85c'
       this.$refs.myArticle.style.color = ''
-    },
-    articleContent() {
-      this.$router.push({
-        path: '/home/'
-      })
     },
     // 给文章点赞
     async sumFavorites(item) {
