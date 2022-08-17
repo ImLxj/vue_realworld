@@ -56,6 +56,7 @@
 import { rulesEmail, rulesPassword } from '@/utils/rules'
 import { mapState } from 'vuex'
 import Bounced from '@/components/Bounced'
+import { reqGetLogin } from '@/api/axios'
 export default {
   name: 'Login',
   components: { Bounced },
@@ -72,7 +73,7 @@ export default {
     }
   },
   methods: {
-    getLogin() {
+    async getLogin() {
       const user = {
         email: this.email,
         password: this.password
@@ -80,18 +81,22 @@ export default {
       this.rulesEmail()
       this.rulesPassword()
       if (this.emValidator && this.pawValidator) {
-        this.$store.dispatch('getUserLogin', user)
-        setTimeout(() => {
-          if (this.errors.message) {
-            this.message = this.errors.message
-            this.clickCount += 1
-            this.isLogin = true
-          } else {
-            this.message = ''
-            this.clickCount = 0
-            this.isLogin = false
-          }
-        }, 100)
+        const result = await reqGetLogin(user)
+        if (result.status === 200 && !result.data.errors) {
+          this.$store.commit('SETTOKEN', `Bearer ${result.data.token}`)
+          this.$store.commit('SETUSERNAME', result.data.username)
+          this.$store.commit('SETUSERID', result.data._id)
+          delete result.data.token // 将用户的token从列表里面删除
+          this.$store.commit('GETUSERLOGIN', result.data)
+          this.message = ''
+          this.clickCount = 0
+          this.isLogin = false
+          this.$router.push('/')
+        } else {
+          this.message = result.message
+          this.clickCount += 1
+          this.isLogin = true
+        }
       }
     },
     rulesEmail() {
