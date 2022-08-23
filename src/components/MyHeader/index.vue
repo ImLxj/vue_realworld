@@ -116,7 +116,7 @@ export default {
       if (validation) {
         if (!window.localStorage.getItem('token')) {
           this.isBounced = true
-          this.message = '请登录'
+          this.message = '11请登录'
           this.countClick += 1
           return
         }

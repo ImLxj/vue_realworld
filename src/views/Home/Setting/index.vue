@@ -80,6 +80,7 @@ export default {
   methods: {
     uploadInfo() {
       const files = this.$refs.imageRef.files[0]
+      console.log(files)
       const _this = this
       if (files) {
         const reader = new FileReader()
@@ -109,6 +110,7 @@ export default {
         image: this.imgUrl
       }
       const result = await reqUpdateUserInfo(userInfo)
+      console.log(result)
       if (result.status === 200) {
         this.$store.commit('UPDATEUSERINFO', result.data.user)
         setTimeout(() => {

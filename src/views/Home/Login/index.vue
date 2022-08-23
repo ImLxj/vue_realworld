@@ -62,8 +62,8 @@ export default {
   components: { Bounced },
   data() {
     return {
-      email: '1340482172@qq.com',
-      password: '123456',
+      email: '',
+      password: '',
       emValidator: Boolean, // 邮箱校验
       pawValidator: Boolean, // 密码校验
       isLogin: false,

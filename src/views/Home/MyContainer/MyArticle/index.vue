@@ -31,8 +31,16 @@
     <div class="container page">
       <div class="row article-content">
         <div class="col-md-12">
-          <h2 id="introducing-ionic">{{ articleData.title }}</h2>
-          <p>{{ articleData.body }}</p>
+          <h2 style='color: inherit; line-height: inherit; padding: 0px; margin: 1.6em 0px; font-weight: bold; border-bottom: 2px solid rgb(127, 127, 127); font-size: 1.3em;'><span style='font-size: inherit; line-height: inherit; margin: 0px; display: inline-block; font-weight: normal; background: rgb(127, 127, 127); color: rgb(255, 255, 255); padding: 3px 10px 1px; border-top-right-radius: 3px; border-top-left-radius: 3px; margin-right: 3px;'>
+            {{articleData.title}}
+            </span></h2>
+          <p>
+            <pre v-highlight>
+              <code style="white-space: pre-line" class="javascript">
+                {{ articleData.body }}
+              </code>
+            </pre>
+          </p>
         </div>
       </div>
 

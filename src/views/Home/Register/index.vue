@@ -17,7 +17,7 @@
                 v-model="username"
                 @blur="rulesUsername"
               />
-              <span class="validator" v-show="usernameValidator"
+              <span class="validator" v-show="!usernameValidator"
                 >用户名格式不正确</span
               >
             </fieldset>
@@ -29,7 +29,7 @@
                 v-model="email"
                 @blur="rulesEmail"
               />
-              <span class="validator" v-show="emailValidator"
+              <span class="validator" v-show="!emailValidator"
                 >邮箱格式不正确</span
               >
             </fieldset>
@@ -42,7 +42,7 @@
                 v-model="password"
                 @blur="rulesPassword"
               />
-              <span class="validator" v-show="passwordValidator"
+              <span class="validator" v-show="!passwordValidator"
                 >密码格式不正确</span
               >
             </fieldset>
@@ -58,7 +58,7 @@
     </div>
     <template>
       <div v-for="(count, index) in clickCount" :key="index + 'register'">
-        <Bounced v-if="isLogin" :message="message" />
+        <Bounced v-if="isLogin" :message="message" :type="type" />
       </div>
     </template>
   </div>
@@ -77,23 +77,24 @@ export default {
       username: '',
       email: '',
       password: '',
-      usernameValidator: false,
-      passwordValidator: false,
-      emailValidator: false,
+      usernameValidator: Boolean,
+      passwordValidator: Boolean,
+      emailValidator: Boolean,
       isLogin: false,
       message: '请登录',
-      clickCount: 0
+      clickCount: 0,
+      type: 'alert-danger'
     }
   },
   methods: {
     async getRegister() {
-      this.emailValidator = rulesEmail(this.email)
-      this.passwordValidator = rulesPassword(this.password)
-      this.usernameValidator = rulesUsername(this.username)
+      this.rulesEmail()
+      this.rulesPassword()
+      this.rulesUsername()
       if (
-        !this.usernameValidator &&
-        !this.emailValidator &&
-        !this.passwordValidator
+        this.emailValidator &&
+        this.passwordValidator &&
+        this.usernameValidator
       ) {
         const result = await reqGetRegister({
           username: this.username,
@@ -101,6 +102,25 @@ export default {
           password: this.password
         })
         console.log(result)
+        if (result.status === 201) {
+          this.$router.push('/home/login')
+          this.clickCount = 0
+          this.isLogin = false
+        } else {
+          this.clickCount += 1
+          this.message = result.message
+          this.isLogin = true
+        }
+      }
+      /* this.emailValidator = rulesEmail(this.email)
+      this.passwordValidator = rulesPassword(this.password)
+      this.usernameValidator = rulesUsername(this.username)
+      if (!this.usernameValidator && !this.emailValidator && !this.passwordValidator) {
+        const result = await reqGetRegister({
+          username: this.username,
+          email: this.email,
+          password: this.password
+        })
         if (result.status === 200) {
           const error = result.data.errors
           error.forEach((item) => {
@@ -115,7 +135,7 @@ export default {
           this.clickCount = 0
           this.isLogin = false
         }
-      }
+      } */
     },
     rulesEmail() {
       this.emailValidator = rulesEmail(this.email)

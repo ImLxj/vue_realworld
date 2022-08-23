@@ -83,6 +83,7 @@ import { mapState } from 'vuex'
 import Bounced from '@/components/Bounced'
 import { reqFavorite, reqUnFavorite } from '@/api/axios'
 import Pagination from '@/components/Pagination'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'Article',
   components: { Bounced, Pagination },
@@ -119,12 +120,12 @@ export default {
           offset: (this.pageNum - 1) * this.pageSize,
           author:
             this.$route.params.username ||
-            window.localStorage.getItem('username')
+            getItem('username')
         })
       }
     },
     myArticle(e) {
-      if (!window.localStorage.getItem('token')) {
+      if (!getItem('token')) {
         this.message = '请登录'
         this.isLogin = true
         this.clickCount += 1
@@ -175,7 +176,7 @@ export default {
     },
     // 给文章点赞
     async sumFavorites(item) {
-      if (!this.userInfo._id || !window.localStorage.getItem('token')) {
+      if (!this.userInfo._id || !getItem('token')) {
         this.message = '请登录'
         this.isLogin = true
         this.clickCount += 1
@@ -200,7 +201,7 @@ export default {
     },
     // 跳转到文章具体内容页面
     sendArticle(articleInfo) {
-      if (!this.userInfo._id || !window.localStorage.getItem('token')) {
+      if (!this.userInfo._id || !getItem('token')) {
         this.message = '请登录'
         this.isLogin = true
         this.clickCount += 1
