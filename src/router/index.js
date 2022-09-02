@@ -4,35 +4,21 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home'
 import MyContainer from '../views/Home/MyContainer'
 import CreateArticle from '../views/Home/CreateArticle'
-import Login from '../views/Home/Login'
-import Register from '../views/Home/Register'
+import Login from '../views/Login'
+import Register from '../views/Register'
 import MyArticle from '../views/Home/MyContainer/MyArticle'
 import Setting from '../views/Home/Setting'
 import Information from '../views/Home/Information'
 
 // 先保存push 和 replace 方法
 const originPush = VueRouter.prototype.push
-const originReplace = VueRouter.prototype.replace
 
-// 重写push 和 replace方法
+// 重写push
 VueRouter.prototype.push = function (location, resolve, reject) {
   if (resolve && reject) {
     originPush.call(this, location, resolve, reject)
   } else {
     originPush.call(
-      this,
-      location,
-      () => {},
-      () => {}
-    )
-  }
-}
-
-VueRouter.prototype.replace = function (location, resolve, reject) {
-  if (resolve && reject) {
-    originReplace.call(this, location, resolve, reject)
-  } else {
-    originReplace.call(
       this,
       location,
       () => {},
@@ -63,16 +49,6 @@ const routes = [
         name: 'createarticle',
         component: CreateArticle,
         meta: { validator: true }
-      },
-      {
-        path: 'login',
-        name: 'login',
-        component: Login
-      },
-      {
-        path: 'register',
-        name: 'register',
-        component: Register
       },
       {
         path: 'myarticle',
@@ -106,6 +82,16 @@ const routes = [
         }
       }
     ]
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: Login
+  },
+  {
+    path: '/register',
+    name: 'register',
+    component: Register
   }
 ]
 
@@ -117,7 +103,10 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.meta.validator) {
     if (!window.localStorage.token) {
-      return console.log('请登录')
+      return this.$message({
+        message: '请登录',
+        type: 'warning'
+      })
     }
   }
   next()

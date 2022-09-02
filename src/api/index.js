@@ -3,7 +3,7 @@ import nprogress from 'nprogress'
 import { getItem } from '@/utils/storage'
 
 const instance = axios.create({
-  baseURL: '/api/',
+  baseURL: 'http://localhost:3000/api/',
   timeout: 5000
 })
 

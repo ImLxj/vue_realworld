@@ -91,6 +91,7 @@ export default {
   methods: {
     async getArticle() {
       const result = await reqArticle(this.$route.params.id)
+      console.log(result)
       if (result.status === 200) {
         this.articleData = result.data.articleData
       }

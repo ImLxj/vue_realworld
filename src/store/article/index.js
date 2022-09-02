@@ -19,7 +19,6 @@ const getters = {
 }
 const mutations = {
   GETARTICLELIST(state, data) {
-    console.log(data)
     state.articleList = data.articles ? data.articles : data
     state.articlesCount = data.articlesCount
   }

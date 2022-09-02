@@ -2,12 +2,15 @@
   <div>
     <div class="feed-toggle">
       <ul class="nav nav-pills outline-active">
+        <!-- 我的文章 -->
         <li v-if="text1" class="nav-item" @click="myArticle">
           <a class="nav-link disabled" ref="myArticle">{{ text1 }}</a>
         </li>
+        <!-- 全部文章 -->
         <li v-if="text2" class="nav-item" @click="allArticle">
           <a class="nav-link" ref="allArticle">{{ text2 }}</a>
         </li>
+        <!-- 我喜欢的文章 -->
         <li v-if="text3" class="nav-item" @click="loveArticle">
           <a class="nav-link" ref="loveArticle">{{ text3 }}</a>
         </li>
@@ -51,13 +54,14 @@
         <p>{{ item.body }}</p>
         <div class="bottom">
           <span>Read more...</span>
-          <span
-            class="tagList"
-            v-for="(tag, index) in item.tagList"
-            v-if="!item.tagList[0] == ''"
-            :key="index + 'tag'"
-            >{{ tag }}</span
-          >
+          <template v-for="(tag, index) in item.tagList">
+            <span
+              class="tagList"
+              v-if="!item.tagList[0] == ''"
+              :key="index + 'tag'"
+              >{{ tag }}</span
+            >
+          </template>
         </div>
       </a>
     </div>
@@ -96,7 +100,8 @@ export default {
       type: 'alert-danger',
       clickCount: 0,
       pageNum: 1, // 当前页数
-      pageSize: 3 // 一页显示几条
+      pageSize: 3, // 一页显示几条
+      queryUser: '' // 分页器查询的用户名称
     }
   },
   mounted() {
@@ -104,24 +109,43 @@ export default {
   },
   // tabs 颜色切换
   methods: {
+    // 初始化文章显示
+    /*
+      文章显示有两种情况：
+        - 在主页的时候，刚开始显示所有文章
+        - 就是跳转到用户页面的时候，显示当前用户发布的所有文章,
+          当跳转到当前用户页面的时候，需要看是否时当前登录用户，需要根据组件传递的参数来和localStorage里面的username字段的值想不想同
+          不相同则表示不是当前登录用户，使用路由传递过来的值，如果相同就使用localStorage的username值
+    */
     initArticles() {
-      if (!this.text3) {
+      // 当在主页的时候
+      if (this.$route.path === '/home/container') {
         this.$refs.allArticle.style.color = '#5cb85c'
         this.animation = 'allArticle'
         this.$store.dispatch('getArticleList', {
           limit: this.pageSize,
           offset: (this.pageNum - 1) * this.pageSize
         })
-      } else {
+      } else if (this.$route.path === '/home/information') {
         this.$refs.myArticle.style.color = '#5cb85c'
         this.animation = 'myArticle'
-        this.$store.dispatch('getArticleList', {
-          limit: this.pageSize,
-          offset: (this.pageNum - 1) * this.pageSize,
-          author:
-            this.$route.params.username ||
-            getItem('username')
-        })
+        this.queryUser = getItem('username')
+        if (!this.$route.params.author.username === getItem('username')) {
+          // 相同的情况
+          this.$store.dispatch('getArticleList', {
+            limit: this.pageSize,
+            offset: (this.pageNum - 1) * this.pageSize,
+            author: this.queryUser
+          })
+        } else {
+          // 不相同的情况
+          this.queryUser = this.$route.params.author.username
+          this.$store.dispatch('getArticleList', {
+            limit: this.pageSize,
+            offset: (this.pageNum - 1) * this.pageSize,
+            author: this.queryUser
+          })
+        }
       }
     },
     myArticle(e) {
@@ -140,19 +164,21 @@ export default {
       }
       this.animation = 'myArticle'
       e.target.style.color = '#5cb85c'
-      if (!this.text3) {
+      // 查看我的文章在主页，这个时候肯定是当前登录用户发布的文章
+      if (this.$route.path === '/home/container') {
         this.$store.dispatch('getArticleList', {
           limit: this.pageSize,
           offset: (this.pageNum - 1) * this.pageSize,
-          author: this.userInfo.username
+          author: getItem('username')
         })
         this.$refs.allArticle.style.color = ''
-      } else {
+      } else if (this.$route.path === '/home/information') {
+        // 这个时候肯定是去用户主页这分页肯定是 this.query的
         this.$refs.loveArticle.style.color = ''
         this.$store.dispatch('getArticleList', {
           limit: this.pageSize,
           offset: (this.pageNum - 1) * this.pageSize,
-          author: this.$route.params.author.username
+          author: this.queryUser
         })
       }
       this.pageNum = 1
@@ -194,10 +220,18 @@ export default {
           this.isLogin = false
         }
       }
-      this.$store.dispatch('getArticleList', {
-        limit: this.pageSize,
-        offset: (this.pageNum - 1) * this.pageSize
-      })
+      if (this.animation === 'myArticle') {
+        this.$store.dispatch('getArticleList', {
+          limit: this.pageSize,
+          offset: (this.pageNum - 1) * this.pageSize,
+          author: this.queryUser
+        })
+      } else if (this.animation === 'allArticle') {
+        this.$store.dispatch('getArticleList', {
+          limit: this.pageSize,
+          offset: (this.pageNum - 1) * this.pageSize
+        })
+      }
     },
     // 跳转到文章具体内容页面
     sendArticle(articleInfo) {
@@ -223,11 +257,11 @@ export default {
           limit: this.pageSize,
           offset: (this.pageNum - 1) * this.pageSize
         })
-      } else {
+      } else if (this.animation === 'myArticle') {
         this.$store.dispatch('getArticleList', {
           limit: this.pageSize,
           offset: (this.pageNum - 1) * this.pageSize,
-          author: this.userInfo.username
+          author: this.queryUser
         })
       }
     },

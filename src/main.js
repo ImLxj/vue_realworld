@@ -1,14 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import axios from './api/index'
 import 'nprogress/nprogress.css'
 import store from './store'
 import { dateFormat } from './utils/dateFormat'
-import hljs from 'highlight.js'
-import 'highlight.js/styles/atom-one-dark.css' //
+import './plugin/element.js'
+
 Vue.config.productionTip = false
-Vue.prototype.$http = axios
 
 // 处理时间的过滤器
 Vue.filter('timer', function (value) {
@@ -21,13 +19,6 @@ Vue.filter('timer', function (value) {
 Vue.filter('deleteSpace', function (value) {
   const str = value.replace(/\s*/g, '')
   return str
-})
-
-Vue.directive('highlight', function (el) {
-  const blocks = el.querySelectorAll('pre code')
-  blocks.forEach((block) => {
-    hljs.highlightBlock(block)
-  })
 })
 
 new Vue({

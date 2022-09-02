@@ -16,15 +16,16 @@
       </button>
       <button v-if="startNumAndEndNum.start > 2">...</button>
 
-      <button
-        v-for="(page, index) in startNumAndEndNum.end"
-        :key="index"
-        v-if="page >= startNumAndEndNum.start"
-        @click="$emit('getPageNum', page)"
-        :class="{ active: pageNum == page }"
-      >
-        {{ page }}
-      </button>
+      <template v-for="(page, index) in startNumAndEndNum.end">
+        <button
+          :key="index"
+          v-if="page >= startNumAndEndNum.start"
+          @click="$emit('getPageNum', page)"
+          :class="{ active: pageNum == page }"
+        >
+          {{ page }}
+        </button>
+      </template>
 
       <button v-if="startNumAndEndNum.end < totalPage - 1">...</button>
       <button

@@ -1,49 +1,38 @@
 <template>
-  <div class="container">
-    <router-link class="navbar-brand header-title" to="/home/container"
-      >文章博客</router-link
-    >
-    <ul
-      class="nav navbar-nav collapse navbar-collapse pull-xs-right header-right"
-    >
-      <li
-        class="nav-item"
-        v-for="(item, index) in routerList"
-        :key="index"
-        @click="goPath(item.path, item.isToken)"
+  <div class="container" style="height: 50px">
+    <div class="row" style="height: 100%">
+      <router-link
+        class="navbar-brand header-title col-lg-4 col-md-4 col-xs-4"
+        to="/home/container"
+        >文章博客</router-link
       >
-        <a
-          :class="$route.path.includes(item.path) ? 'active' : ''"
-          @click="handle(item.title)"
-          >{{ item.title }}</a
-        >
-      </li>
-    </ul>
-    <!-- 提示弹框 -->
-    <template>
-      <div v-for="(count, index) in countClick" :key="index + 'header'">
-        <Bounced v-show="isBounced" :message="message" :type="type" />
-      </div>
-    </template>
+      <nav class="col-lg-8 col-md-8 col-xs-8">
+        <ul class="pull-xs-right header-right">
+          <li
+            class="nav-item"
+            v-for="(item, index) in routerList"
+            :key="index"
+            @click="changePath(item.path, index)"
+          >
+            <a :class="tabIndex === index ? 'active' : ''">{{ item.title }}</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import Bounced from '@/components/Bounced'
 import { reqUserInfo } from '@/api/axios'
 import { removeItem } from '@/utils/storage'
 export default {
   name: 'Header',
-  components: { Bounced },
   data() {
     return {
-      isBounced: false,
-      message: '请登录',
-      countClick: 0,
       isIndex: 1,
-      type: 'alert-danger',
       isUsername: false,
+      tabIndex: 0,
       routerList: [
         {
           title: '主页',
@@ -62,12 +51,12 @@ export default {
         },
         {
           title: '登录',
-          path: '/home/login',
+          path: '/login',
           isToken: false
         },
         {
           title: '注册',
-          path: '/home/register',
+          path: '/register',
           isToken: false
         }
       ]
@@ -80,9 +69,7 @@ export default {
       if (title === this.userInfo.username) {
         const res = await reqUserInfo()
         if (!res) {
-          this.isBounced = true
-          this.message = '请重新登录'
-          this.countClick += 1
+          this.$message({})
           return
         }
         if (res.status === 401) {
@@ -116,7 +103,7 @@ export default {
       if (validation) {
         if (!window.localStorage.getItem('token')) {
           this.isBounced = true
-          this.message = '11请登录'
+          this.message = '请登录'
           this.countClick += 1
           return
         }
@@ -127,6 +114,9 @@ export default {
       } else {
         this.$router.push(path)
       }
+    },
+    changePath(path, index) {
+      this.tabIndex = index
     }
   },
   computed: {
@@ -175,13 +165,16 @@ a {
 }
 .active {
   color: #000;
-  font-weight: 500;
+  font-weight: 700;
+  font-size: 15px;
+  align-content: center;
 }
 .header-title {
   float: left;
   font-weight: bold;
   font-size: 24px;
   color: #5cb85c;
+  // color: transparent;
 }
 
 .username {

@@ -51,73 +51,24 @@
         </div>
       </div>
     </div>
-    <template>
-      <div v-for="(count, index) in clickCount" :key="index">
-        <Bounced v-if="isLogin" :message="message" />
-      </div>
-    </template>
   </div>
 </template>
 
 <script>
 import { reqCreateArticle } from '@/api/axios'
-import Bounced from '@/components/Bounced'
 export default {
   name: 'CreateArticle',
-  components: { Bounced },
   data() {
     return {
       article: { title: '', description: '', body: '', tagList: '' },
-      isLogin: false,
-      message: '请登录',
-      clickCount: 0
     }
   },
   methods: {
-    async createArticle() {
-      this.rulesTitle()
-      this.rulesDescription()
-      this.rulesBody()
-      const result = await reqCreateArticle(this.article)
-      if (result.status === 200) {
-        this.article.title = ''
-        this.article.description = ''
-        this.article.body = ''
-        this.article.tagList = ''
-        alert('发表文章成功')
-        this.$router.push('/home/container')
-      }
-      // 销毁所有的弹框
-      if (!result.data.errors) {
-        this.isLogin = false
-      }
-    },
-    // 判断题目是否为空
-    rulesTitle() {
-      const reg = /\S/
-      if (!reg.test(this.article.title)) {
-        this.message = '请输入文章题目'
-        this.clickCount += 1
-        this.isLogin = true
-      }
-    },
-    // 判断摘要是否为空
-    rulesDescription() {
-      const reg = /\S/
-      if (!reg.test(this.article.description)) {
-        this.message = '请输入文章摘要'
-        this.clickCount += 1
-        this.isLogin = true
-      }
-    },
-    // 判断文章内容是否为空
-    rulesBody() {
-      const reg = /\S/
-      if (!reg.test(this.article.body)) {
-        this.message = '请输入文章内容'
-        this.clickCount += 1
-        this.isLogin = true
-      }
+    createArticle() {
+      this.$message({
+        message: '确定',
+        type: 'success'
+      })
     }
   }
 }

@@ -110,7 +110,6 @@ export default {
         image: this.imgUrl
       }
       const result = await reqUpdateUserInfo(userInfo)
-      console.log(result)
       if (result.status === 200) {
         this.$store.commit('UPDATEUSERINFO', result.data.user)
         setTimeout(() => {
