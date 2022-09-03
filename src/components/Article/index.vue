@@ -73,35 +73,31 @@
       :continues="5"
       @getPageNum="getPageNum"
     />
-    <!-- 警告框 -->
-    <template>
-      <div v-for="(count, index) in clickCount" :key="index + 'article'">
-        <Bounced v-if="isLogin" :message="message" :type="type" />
-      </div>
-    </template>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import Bounced from '@/components/Bounced'
 import { reqFavorite, reqUnFavorite } from '@/api/axios'
 import Pagination from '@/components/Pagination'
 import { getItem } from '@/utils/storage'
 export default {
   name: 'Article',
-  components: { Bounced, Pagination },
-  props: ['text1', 'text2', 'text3'],
+  components: { Pagination },
+  props: {
+    text1: String,
+    text2: String,
+    text3: String,
+    username: {
+      type: String,
+      default: null
+    }
+  },
   data() {
     return {
       animation: 'allArticle',
-      isLogin: false,
-      message: '请登录',
-      type: 'alert-danger',
-      clickCount: 0,
       pageNum: 1, // 当前页数
-      pageSize: 3, // 一页显示几条
-      queryUser: '' // 分页器查询的用户名称
+      pageSize: 3 // 一页显示几条
     }
   },
   mounted() {
@@ -129,37 +125,36 @@ export default {
       } else if (this.$route.path === '/home/information') {
         this.$refs.myArticle.style.color = '#5cb85c'
         this.animation = 'myArticle'
-        this.queryUser = getItem('username')
-        if (!this.$route.params.author.username === getItem('username')) {
-          // 相同的情况
-          this.$store.dispatch('getArticleList', {
-            limit: this.pageSize,
-            offset: (this.pageNum - 1) * this.pageSize,
-            author: this.queryUser
-          })
-        } else {
-          // 不相同的情况
-          this.queryUser = this.$route.params.author.username
-          this.$store.dispatch('getArticleList', {
-            limit: this.pageSize,
-            offset: (this.pageNum - 1) * this.pageSize,
-            author: this.queryUser
-          })
-        }
+        this.$store.dispatch('getArticleList', {
+          limit: this.pageSize,
+          offset: (this.pageNum - 1) * this.pageSize,
+          author: this.username
+        })
       }
     },
-    myArticle(e) {
-      if (!getItem('token')) {
-        this.message = '请登录'
-        this.isLogin = true
-        this.clickCount += 1
+    // 跳转到用户信息页面
+    goInformation(author) {
+      if (!getItem('token') && !getItem('_id')) {
+        this.$message({
+          message: '请登录',
+          type: 'error'
+        })
         return
       }
-      const authorId = this.userInfo._id
-      if (!authorId) {
-        this.message = '没有当前用户id，请登录'
-        this.isLogin = true
-        this.clickCount += 1
+      this.$router.push({
+        name: 'information',
+        params: {
+          _id: author._id,
+          username: author.username
+        }
+      })
+    },
+    myArticle(e) {
+      if (!getItem('token') && !getItem('_id')) {
+        this.$message({
+          message: '请登录',
+          type: 'error'
+        })
         return
       }
       this.animation = 'myArticle'
@@ -178,12 +173,10 @@ export default {
         this.$store.dispatch('getArticleList', {
           limit: this.pageSize,
           offset: (this.pageNum - 1) * this.pageSize,
-          author: this.queryUser
+          author: this.username
         })
       }
-      this.pageNum = 1
-      this.isLogin = false
-      this.clickCount = 1
+      this.pageNum = 1 // 再把页数设置为
     },
     allArticle(e) {
       this.animation = 'allArticle'
@@ -224,7 +217,7 @@ export default {
         this.$store.dispatch('getArticleList', {
           limit: this.pageSize,
           offset: (this.pageNum - 1) * this.pageSize,
-          author: this.queryUser
+          author: this.username
         })
       } else if (this.animation === 'allArticle') {
         this.$store.dispatch('getArticleList', {
@@ -261,23 +254,9 @@ export default {
         this.$store.dispatch('getArticleList', {
           limit: this.pageSize,
           offset: (this.pageNum - 1) * this.pageSize,
-          author: this.queryUser
+          author: this.username
         })
       }
-    },
-    // 跳转到用户资料页面
-    goInformation(author) {
-      this.$router.push({
-        name: 'information',
-        params: {
-          author,
-          pageSize: 3,
-          pageNum: 1
-        },
-        query: {
-          t: Date.now()
-        }
-      })
     },
     // 判断文章是是否被当前用户喜欢
     favorite(item) {

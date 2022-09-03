@@ -28,7 +28,11 @@
     <div class="container">
       <div class="row">
         <div class="col-xs-12 col-md-10 offset-md-1">
-          <Article text1="我的文章" text3="我喜欢的文章" />
+          <Article
+            :username="this.$route.params.username"
+            text1="我的文章"
+            text3="我喜欢的文章"
+          />
         </div>
       </div>
     </div>
@@ -39,6 +43,7 @@
 import { mapState } from 'vuex'
 import Article from '@/components/Article'
 import { reqProfiles, reqFollowing, reqUnFollowing } from '@/api/axios'
+import { getItem } from '@/utils/storage'
 export default {
   name: 'Information',
   components: { Article },
@@ -49,62 +54,32 @@ export default {
     }
   },
   mounted() {
-    this.getArticleList()
     this.profiles()
   },
   methods: {
-    getArticleList() {
-      this.$store.dispatch('getArticleList', {
-        limit: this.$route.params.pageSize,
-        offset: (this.$route.params.pageNum - 1) * this.$route.params.pageSize,
-        author: this.$route.params.author.username
-      })
-    },
     // 关注用户
     async following() {
-      const res = await reqFollowing(this.$route.params.author._id)
+      const res = await reqFollowing(getItem('_id'))
       if (res.status === 200) {
         this.isFollowing = !this.isFollowing
       }
     },
     // 取消关注用户
     async unFollowUser() {
-      const res = await reqUnFollowing(this.$route.params.author._id)
+      const res = await reqUnFollowing(getItem('_id'))
       if (res.status === 200) {
         this.isFollowing = !this.isFollowing
       }
     },
     // 获取个人资料
     async profiles() {
-      const profilesId = window.localStorage.getItem('_id') // 点击当前登录用户的个人信息 直接通过接口获取
-      const author = this.$route.params.author // 这个是其他用户的个人信息 通过路由传参获取
-      if (!author.username) {
-        const res = await reqProfiles(profilesId)
-        if (res.status === 200) {
-          this.profilesInfo = res.data.profile // 获取到的当前登录用户信息
-        }
-        return false
-      }
-      this.profilesInfo = author // 其他用户信息
-      if (this.profilesInfo.following.includes(profilesId)) {
-        this.isFollowing = !this.isFollowing
+      const _id = this.$route.params._id
+      const res = await reqProfiles(_id)
+      console.log(res)
+      if (res.status === 200) {
+        this.profilesInfo = res.data.profile
       }
     }
-  },
-  computed: {
-    ...mapState({
-      articleList: (state) => state.article.articleList
-    })
-  },
-  // 现在这个时候路由里面的params参数还是之前的
-  beforeRouteUpdate(to, from, next) {
-    this.profiles() // 直接刷新用户信息
-    // 如果不加nextTick的话，点击第一下跳转当前路由这时的username还是之前的没有发生改变然后请求就发送出去了，加上nextTick的作用就是等username改变之后在发送请求
-    this.$nextTick(function () {
-      this.getArticleList()
-      this.profilesInfo = to.params.author
-    })
-    next()
   }
 }
 </script>

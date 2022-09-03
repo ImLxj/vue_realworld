@@ -1,5 +1,6 @@
 import instance from './index'
-const token = window.localStorage.getItem('token')
+import { getItem } from '@/utils/storage'
+const token = getItem('token')
 // 发送文章请求
 export const reqGetArticle = (option) => {
   return instance({

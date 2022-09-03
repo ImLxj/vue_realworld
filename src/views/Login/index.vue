@@ -95,13 +95,15 @@ export default {
             this.$router.push('/')
             this.$message({
               message: '登录成功',
-              type: 'success'
+              type: 'success',
+              duration: 2000
             })
             return
           }
           this.$message({
             message: result.message,
-            type: 'error'
+            type: 'error',
+            duration: 2000
           })
           this.$refs.loginRefs.resetFields()
         }

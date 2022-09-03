@@ -4,7 +4,7 @@ import router from './router'
 import 'nprogress/nprogress.css'
 import store from './store'
 import { dateFormat } from './utils/dateFormat'
-import './plugin/element.js'
+import './plugin/element'
 
 Vue.config.productionTip = false
 
