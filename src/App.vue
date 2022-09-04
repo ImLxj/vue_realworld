@@ -33,7 +33,6 @@ export default {
     // 如果本地存储当中有当前用户信息发起请求让用户仓库里面拥有信息
     async user() {
       const res = await reqUserInfo()
-      console.log(res)
       if (res.status === 200) {
         this.$store.commit('GETUSERLOGIN', res.data.user)
       }

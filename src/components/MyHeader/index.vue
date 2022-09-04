@@ -116,8 +116,10 @@ export default {
                 name: 'information',
                 params: {
                   _id: getItem('_id'),
+                  image: this.userInfo.image,
                   username: getItem('username')
-                }
+                },
+                query: '/t' + new Date().getTime()
               })
               break
             default:

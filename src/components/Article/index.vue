@@ -145,8 +145,10 @@ export default {
         name: 'information',
         params: {
           _id: author._id,
+          image: author.image,
           username: author.username
-        }
+        },
+        query: '/t' + new Date().getTime()
       })
     },
     myArticle(e) {
@@ -269,6 +271,11 @@ export default {
       userInfo: (state) => state.user.userInfo,
       articlesCount: (state) => state.article.articlesCount
     })
+  },
+  watch: {
+    username() {
+      this.initArticles()
+    }
   }
 }
 </script>

@@ -25,19 +25,23 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (response) => {
-    nprogress.done()
-    if (response.data.error) {
-      window.localStorage.clear() // 超过token登录时间自动清除之前用户信息
-      return {
-        status: 401,
-        message: '登录超时'
+    try {
+      nprogress.done()
+      if (response.data.error) {
+        window.localStorage.clear() // 超过token登录时间自动清除之前用户信息
+        return {
+          status: 401,
+          message: '登录超时'
+        }
+      } else if (response.data.errors) {
+        return {
+          message: response.data.errors[0].msg
+        }
       }
-    } else if (response.data.errors) {
-      return {
-        message: response.data.errors[0].msg
-      }
+      return response
+    } catch (error) {
+      return error
     }
-    return response
   },
   (error) => {
     return Promise.reject(error)

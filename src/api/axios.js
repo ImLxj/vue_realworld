@@ -120,9 +120,22 @@ export const reqUnFollowing = (otherId) => {
 }
 
 // 获取个人资料
-export const reqProfiles = (userId) => {
+export const reqProfiles = () => {
+  if (!token) return console.log('请登录')
   return instance({
     method: 'GET',
-    url: `profiles/${userId}`
+    url: 'profiles'
+  })
+}
+// 获取其他用户个人资料
+export const reqOtherProfiles = (id) => {
+  console.log(id)
+  if (!token) return console.log('请登录')
+  return instance({
+    method: 'POST',
+    url: 'profiles/other',
+    data: {
+      id
+    }
   })
 }

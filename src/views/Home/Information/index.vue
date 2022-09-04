@@ -40,9 +40,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import Article from '@/components/Article'
-import { reqProfiles, reqFollowing, reqUnFollowing } from '@/api/axios'
+import { reqFollowing, reqUnFollowing } from '@/api/axios'
 import { getItem } from '@/utils/storage'
 export default {
   name: 'Information',
@@ -54,7 +53,7 @@ export default {
     }
   },
   mounted() {
-    this.profiles()
+    this.profilesInfo = this.$route.params
   },
   methods: {
     // 关注用户
@@ -70,15 +69,11 @@ export default {
       if (res.status === 200) {
         this.isFollowing = !this.isFollowing
       }
-    },
-    // 获取个人资料
-    async profiles() {
-      const _id = this.$route.params._id
-      const res = await reqProfiles(_id)
-      console.log(res)
-      if (res.status === 200) {
-        this.profilesInfo = res.data.profile
-      }
+    }
+  },
+  watch: {
+    '$route.params.username'() {
+      this.profilesInfo = this.$route.params
     }
   }
 }
