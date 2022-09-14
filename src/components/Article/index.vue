@@ -256,13 +256,13 @@ export default {
         this.$store.dispatch('getArticleList', {
           limit: this.pageSize,
           offset: (this.pageNum - 1) * this.pageSize,
-          author: this.username
+          author: getItem('username')
         })
       }
     },
     // 判断文章是是否被当前用户喜欢
     favorite(item) {
-      return item.favorite.includes(this.userInfo._id)
+      return item.favorite.includes(getItem('_id'))
     }
   },
   computed: {

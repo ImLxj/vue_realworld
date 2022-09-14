@@ -129,7 +129,6 @@ export const reqProfiles = () => {
 }
 // 获取其他用户个人资料
 export const reqOtherProfiles = (id) => {
-  console.log(id)
   if (!token) return console.log('请登录')
   return instance({
     method: 'POST',

@@ -5,7 +5,7 @@
         <div class="card-block">
           <textarea
             class="form-control"
-            placeholder="Write a comment..."
+            placeholder="赶快评论一下吧！"
             rows="3"
             v-model="commentCenter"
           ></textarea>

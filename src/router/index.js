@@ -53,15 +53,14 @@ const routes = [
       {
         path: 'myarticle',
         name: 'myarticle',
-        component: MyArticle
-        // meta: { validator: true },
-        // 判断是否是点击跳转的 如果不是点击跳转的则还是当前页面
-        // beforeEnter: (to, from, next) => {
-        //   if (!to.params.id) {
-        //     next('/home/container')
-        //   }
-        //   next()
-        // }
+        component: MyArticle,
+        meta: { validator: true },
+        beforeEnter: (to, from, next) => {
+          if (!to.params.id) {
+            next('/home/container')
+          }
+          next()
+        }
       },
       {
         path: 'setting',

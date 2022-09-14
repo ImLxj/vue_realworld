@@ -4,50 +4,43 @@
       <div class="row editor-content">
         <div class="col-md-10 offset-md-1 col-xs-12">
           <h1 class="text-xs-center">创建文章</h1>
-          <form>
-            <fieldset>
-              <fieldset class="form-group">
-                <input
-                  type="text"
-                  class="form-control form-control-lg"
-                  placeholder="文章标题"
-                  v-model="article.title"
-                />
-              </fieldset>
-              <fieldset class="form-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="这篇文章是关于什么的?"
-                  v-model="article.description"
-                />
-              </fieldset>
-              <fieldset class="form-group">
-                <textarea
-                  class="form-control"
-                  rows="8"
-                  placeholder="把你的文章写下下来"
-                  v-model="article.body"
-                ></textarea>
-              </fieldset>
-              <fieldset class="form-group">
-                <input
-                  type="text"
-                  class="form-control"
-                  placeholder="输入标签,各个标签之间用逗号隔开"
-                  v-model="article.tagList"
-                />
-                <div class="tag-list"></div>
-              </fieldset>
-              <button
-                class="btn btn-lg pull-xs-right btn-primary"
-                type="button"
-                @click="createArticle"
+          <el-form
+            :model="article"
+            :rules="rules"
+            ref="ruleForm"
+            label-width="100px"
+            class="demo-ruleForm"
+          >
+            <el-form-item label="文章标题" prop="title">
+              <el-input v-model="article.title"></el-input>
+            </el-form-item>
+            <el-form-item label="文章描述" prop="description">
+              <el-input v-model="article.description"></el-input>
+            </el-form-item>
+            <el-form-item label="文章内容" prop="body">
+              <textarea
+                class="form-control"
+                rows="3"
+                v-model="article.body"
+                cols=""
+              ></textarea>
+            </el-form-item>
+            <el-form-item label="文章标签" prop="tagList">
+              <el-input v-model="article.tagList"></el-input>
+            </el-form-item>
+            <el-form-item
+              style="
+                display: flex;
+                align-items: center;
+                flex-direction: row-reverse;
+              "
+            >
+              <el-button type="success" @click="submitForm('ruleForm')"
+                >立即创建</el-button
               >
-                发表文章
-              </button>
-            </fieldset>
-          </form>
+              <el-button @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
+          </el-form>
         </div>
       </div>
     </div>
@@ -61,10 +54,33 @@ export default {
   data() {
     return {
       article: { title: '', description: '', body: '', tagList: '' },
+      rules: {
+        title: [{ required: true, message: '请输入文章标题', trigger: 'blur' }],
+        description: [
+          { required: true, message: '请输入文章描述', trigger: 'blur' }
+        ],
+        body: [{ required: true, message: '请输入文章内容', trigger: 'blur' }],
+        tagList: [{ required: false, trigger: 'blur' }]
+      }
     }
   },
   methods: {
-    createArticle() {
+    submitForm(formName) {
+      this.$refs[formName].validate(async (valid) => {
+        if (valid) {
+          const res = await reqCreateArticle(this.article)
+          if (res.status === 200) {
+            this.$router.push('/')
+            return this.$message({
+              message: '创建成功',
+              type: 'success'
+            })
+          }
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
       this.$message({
         message: '确定',
         type: 'success'

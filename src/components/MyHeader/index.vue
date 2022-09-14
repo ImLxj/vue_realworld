@@ -23,7 +23,7 @@
               :key="index"
               @click="changePath(item, index)"
             >
-              <a :class="tabIndex === index ? 'active' : ''">{{
+              <a :class="parseInt(indexStorage) === index ? 'active' : ''">{{
                 item.title
               }}</a>
             </li>
@@ -50,7 +50,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import { removeItem, getItem } from '@/utils/storage'
+import { removeItem, getItem, setItem } from '@/utils/storage'
 export default {
   name: 'Header',
   data() {
@@ -86,7 +86,8 @@ export default {
           path: '/register',
           isToken: false
         }
-      ]
+      ],
+      indexStorage: 0
     }
   },
   mounted() {
@@ -157,7 +158,7 @@ export default {
             3,
             2,
             {
-              title: this.userInfo.username,
+              title: getItem('username'),
               path: '/home/information',
               isToken: true
             },

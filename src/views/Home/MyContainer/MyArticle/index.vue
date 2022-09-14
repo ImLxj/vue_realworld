@@ -11,7 +11,7 @@
           </a>
           <div class="info">
             <a href="" class="author">{{ articleData.author.username }}</a>
-            <span class="date">January 20th</span>
+            <span class="date">{{ articleData.createdAt | timer }}</span>
           </div>
           <button class="btn follow-btn btn-sm btn-outline-secondary">
             <i class="ion-plus-round"></i>
@@ -31,16 +31,38 @@
     <div class="container page">
       <div class="row article-content">
         <div class="col-md-12">
-          <h2 style='color: inherit; line-height: inherit; padding: 0px; margin: 1.6em 0px; font-weight: bold; border-bottom: 2px solid rgb(127, 127, 127); font-size: 1.3em;'><span style='font-size: inherit; line-height: inherit; margin: 0px; display: inline-block; font-weight: normal; background: rgb(127, 127, 127); color: rgb(255, 255, 255); padding: 3px 10px 1px; border-top-right-radius: 3px; border-top-left-radius: 3px; margin-right: 3px;'>
-            {{articleData.title}}
-            </span></h2>
-          <p>
-            <pre v-highlight>
-              <code style="white-space: pre-line" class="javascript">
-                {{ articleData.body }}
-              </code>
-            </pre>
-          </p>
+          <h2
+            style="
+              color: inherit;
+              line-height: inherit;
+              padding: 0px;
+              margin: 1.6em 0px;
+              font-weight: bold;
+              border-bottom: 2px solid rgb(127, 127, 127);
+              font-size: 1.3em;
+            "
+          >
+            <span
+              style="
+                font-size: inherit;
+                line-height: inherit;
+                margin: 0px;
+                display: inline-block;
+                font-weight: normal;
+                background: rgb(127, 127, 127);
+                color: rgb(255, 255, 255);
+                padding: 3px 10px 1px;
+                border-top-right-radius: 3px;
+                border-top-left-radius: 3px;
+                margin-right: 3px;
+              "
+            >
+              {{ articleData.title }}
+            </span>
+          </h2>
+          <div class="article-body">
+            {{ articleData.body }}
+          </div>
         </div>
       </div>
 
@@ -168,11 +190,19 @@ export default {
 
   .article-content {
     // border-bottom: 1px solid #ccc;
-    p {
+    .article-body {
       font-family: 'Source Serif Pro', serif;
       font-size: 20px;
       margin-bottom: 15px;
       font-weight: 600px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      cursor: pointer;
+    }
+    .article-body:hover {
+      box-shadow: 2px 2px 5px #000;
     }
   }
   .article-actions {
